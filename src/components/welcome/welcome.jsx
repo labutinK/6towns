@@ -1,6 +1,7 @@
 import React from "react";
 import PlaceCard from "../placeCard/placeCard";
 import PropTypes from 'prop-types';
+import {placeCardProps} from "../../proptypes/place-card";
 
 const Welcome = (props) => {
   const {placeCards, placesFound} = props;
@@ -88,7 +89,7 @@ const Welcome = (props) => {
               </ul>
             </form>
             <div className="cities__places-list places__list tabs__content">
-              {placeCards.map((name, i) => <PlaceCard name={name} key={name + i}></PlaceCard>)}
+              {placeCards.map((card, i) => <PlaceCard card={card} key={name + i}></PlaceCard>)}
             </div>
           </section>
           <div className="cities__right-section">
@@ -102,7 +103,7 @@ const Welcome = (props) => {
 
 Welcome.propTypes = {
   placesFound: PropTypes.number.isRequired,
-  placeCards: PropTypes.array.isRequired
+  placeCards: PropTypes.arrayOf(PropTypes.shape(placeCardProps))
 };
 
 export default Welcome;
