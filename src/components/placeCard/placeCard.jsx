@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import {placeCardProps} from "../../proptypes/place-card";
+import {Link} from "react-router-dom";
 
 const PlaceCard = (props) => {
   const {name, mark, stars, img, price, type, fav} = props.card;
@@ -30,10 +31,10 @@ const PlaceCard = (props) => {
       </div>
     )}
     <div className="cities__image-wrapper place-card__image-wrapper">
-      <a href="#">
+      <Link to="offer/213">
         <img className="place-card__image" src={img} width="260" height="200"
           alt="Place image"/>
-      </a>
+      </Link>
     </div>
     <div className="place-card__info">
       <div className="place-card__price-wrapper">
