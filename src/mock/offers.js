@@ -1,5 +1,6 @@
 export const PLACE_CARDS = [
   {
+    id: 1,
     name: `Beautiful & luxurious apartment at great location`,
     mark: false,
     stars: 4,
@@ -9,6 +10,7 @@ export const PLACE_CARDS = [
     fav: true,
   },
   {
+    id: 2,
     name: `Wood and stone place`,
     mark: true,
     stars: 5,
@@ -18,6 +20,7 @@ export const PLACE_CARDS = [
     fav: false,
   },
   {
+    id: 3,
     name: `Canal View Prinsengracht`,
     mark: false,
     stars: 5,
@@ -27,15 +30,17 @@ export const PLACE_CARDS = [
     fav: true,
   },
   {
+    id: 4,
     name: `Nice, cozy, warm big bed apartment`,
     mark: true,
     stars: 4,
     img: `./img/apartment-03.jpg`,
     price: 180,
     type: `Apartment`,
-    fav: false,
+    fav: true,
   },
   {
+    id: 5,
     name: `Wood and stone place`,
     mark: false,
     stars: 5,

@@ -3,9 +3,8 @@ import PropTypes from "prop-types";
 import {placeCardProps} from "../../proptypes/place-card";
 import {Link} from "react-router-dom";
 
-const PlaceCard = (props) => {
+const FavoriteCard = (props) => {
   const {id, name, mark, stars, img, price, type, fav} = props.card;
-  const onMouseOver = props.onMouseover;
   let starsNum = 0;
   switch (stars) {
     case (1):
@@ -25,22 +24,19 @@ const PlaceCard = (props) => {
       break;
   }
 
-
-  return <article className="cities__place-card place-card" onMouseOver={() => {
-    onMouseOver(id);
-  }}>
+  return <article className="favorites__card place-card">
     {mark && (
       <div className="place-card__mark">
         <span>Premium</span>
       </div>
     )}
-    <div className="cities__image-wrapper place-card__image-wrapper">
+    <div className="favorites__image-wrapper place-card__image-wrapper">
       <Link to={`offer/${id}`}>
         <img className="place-card__image" src={img} width="260" height="200"
           alt="Place image"/>
       </Link>
     </div>
-    <div className="place-card__info">
+    <div className="favorites__card-info place-card__info">
       <div className="place-card__price-wrapper">
         <div className="place-card__price">
           <b className="place-card__price-value">&euro;{price}</b>
@@ -67,14 +63,12 @@ const PlaceCard = (props) => {
       </h2>
       <p className="place-card__type">{type}</p>
     </div>
-  </article>
-  ;
+  </article>;
 };
 
 
-PlaceCard.propTypes = {
-  onMouseover: PropTypes.func,
+FavoriteCard.propTypes = {
   card: PropTypes.shape(placeCardProps)
 };
 
-export default PlaceCard;
+export default FavoriteCard;

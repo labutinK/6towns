@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./components/app/app";
-import {PLACE_CARDS} from "./mock/card";
+import {PLACE_CARDS} from "./mock/offers";
 
 const PLACES_TO_STAY = 34;
 
