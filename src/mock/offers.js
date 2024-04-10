@@ -7,6 +7,7 @@ export const PLACE_CARDS = [
     img: `./img/apartment-01.jpg`,
     price: 120,
     type: `Apartment`,
+    coords: [`52.3909553943508`, `4.85309666406198`],
     fav: true,
   },
   {
@@ -17,6 +18,7 @@ export const PLACE_CARDS = [
     img: `./img/room.jpg`,
     price: 80,
     type: `Private room`,
+    coords: [`52.369553943508`, `4.85309666406198`],
     fav: false,
   },
   {
@@ -27,6 +29,7 @@ export const PLACE_CARDS = [
     img: `./img/apartment-02.jpg`,
     price: 132,
     type: `Apartment`,
+    coords: [`52.3909553943508`, `4.929309666406198`],
     fav: true,
   },
   {
@@ -37,16 +40,7 @@ export const PLACE_CARDS = [
     img: `./img/apartment-03.jpg`,
     price: 180,
     type: `Apartment`,
+    coords: [`52.3809553943508`, `4.939309666406198`],
     fav: true,
-  },
-  {
-    id: 5,
-    name: `Wood and stone place`,
-    mark: false,
-    stars: 5,
-    img: `./img/room.jpg`,
-    price: 80,
-    type: `Apartment`,
-    fav: false,
   },
 ];

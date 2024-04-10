@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from 'prop-types';
 import {placeCardProps} from "../../proptypes/place-card";
 import OffersList from "../offersList/offersList";
+import Map from "../map/map";
 
 const Welcome = (props) => {
   const {placeCards, placesFound} = props;
@@ -69,7 +70,7 @@ const Welcome = (props) => {
             {<OffersList placeCards={placeCards}></OffersList>}
           </section>
           <div className="cities__right-section">
-            <section className="cities__map map"></section>
+            {<Map placeCards={placeCards}></Map>}
           </div>
         </div>
       </div>

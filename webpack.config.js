@@ -1,4 +1,5 @@
 const path = require('path');
+const crypto = require('crypto');
 
 module.exports = {
   entry: './src/index.js',
@@ -9,7 +10,7 @@ module.exports = {
   devServer: {
     contentBase: path.resolve(__dirname, 'public'),
     open: false,
-    port: 1337,
+    port: 1487,
     historyApiFallback: true
   },
   module: {
@@ -20,6 +21,14 @@ module.exports = {
         use: {
           loader: 'babel-loader',
         },
+      },
+      {
+        test: /.css$/i,
+        use: ['style-loader', 'css-loader']
+      },
+      {
+        test: /\.(png|jpe?g|gif)$/i,
+        use: ['file-loader'],
       }
     ],
   },
@@ -27,4 +36,5 @@ module.exports = {
     extensions: ['.js', '.jsx']
   },
   devtool: 'source-map',
+  target: 'web',
 };
