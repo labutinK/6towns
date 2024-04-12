@@ -2,10 +2,10 @@ import React from "react";
 import PropTypes from "prop-types";
 import "leaflet/dist/leaflet.css";
 import leaflet from "leaflet";
-import PlaceCard from "../placeCard/placeCard";
+import {placeCardProps} from "../../proptypes/place-card";
 
 const Map = (props) => {
-  const {placeCards} = props;
+  const {placeCards, className, circle} = props;
   const mapRef = React.createRef();
 
   React.useEffect(() => {
@@ -16,24 +16,42 @@ const Map = (props) => {
     map.setView(city, zoom);
     leaflet.tileLayer(`https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png`,
         {attribution: `© OpenStreetMap contributors © CARTO`}).addTo(map);
-    placeCards.map((card, i) => {
+    if (circle) {
+      leaflet.circle(circle, {
+        color: `#6ea3d5`,
+        fillColor: `#6ea3d5`,
+        fillOpacity: 0.5,
+        radius: 1500
+      }).addTo(map);
+    }
+
+    placeCards.map((card) => {
       if (card.coords) {
         leaflet.marker(card.coords, {icon}).addTo(map);
       }
     });
+
+    return () => {
+      map.remove();
+    };
+
   });
 
 
   return (
     <section
       ref={mapRef}
-      className="cities__map map"
+      className={`${className} map`}
     >
     </section>
   );
 
 };
 
-Map.propTypes = {};
+Map.propTypes = {
+  placeCards: PropTypes.arrayOf(PropTypes.shape(placeCardProps)),
+  className: PropTypes.string,
+  circle: PropTypes.arrayOf(PropTypes.string),
+};
 
 export default Map;

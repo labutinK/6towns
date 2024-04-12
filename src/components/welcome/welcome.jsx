@@ -67,10 +67,10 @@ const Welcome = (props) => {
                 <li className="places__option" tabIndex="0">Top rated first</li>
               </ul>
             </form>
-            {<OffersList placeCards={placeCards}></OffersList>}
+            {<OffersList placeCards={placeCards} className={`cities__places-list places__list tabs__content`}></OffersList>}
           </section>
           <div className="cities__right-section">
-            {<Map placeCards={placeCards}></Map>}
+            {<Map placeCards={placeCards} className={`cities__map`}></Map>}
           </div>
         </div>
       </div>

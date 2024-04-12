@@ -4,7 +4,7 @@ import {placeCardProps} from "../../proptypes/place-card";
 import PlaceCard from "../placeCard/placeCard";
 
 const OffersList = (props) => {
-  const {placeCards} = props;
+  const {placeCards, className} = props;
   const [activeEl, setActiveEl] = React.useState(0);
   mouseOnOfferHandler.bind(mouseOnOfferHandler);
 
@@ -12,8 +12,8 @@ const OffersList = (props) => {
     setActiveEl(id);
   }
 
-  return <div className="cities__places-list places__list tabs__content">
-    {placeCards.map((card, i) => <PlaceCard card={card} key={card.id + i}
+  return <div className={`${className}`}>
+    {placeCards.map((card, i) =><PlaceCard card={card} key={card.id + i}
       onMouseover={mouseOnOfferHandler}></PlaceCard>)}
   </div>;
 };

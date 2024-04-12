@@ -2,28 +2,11 @@ import React from "react";
 import PropTypes from "prop-types";
 import {placeCardProps} from "../../proptypes/place-card";
 import {Link} from "react-router-dom";
+import {getWidthFromStars} from "../../utils/utils";
 
 const PlaceCard = (props) => {
   const {id, name, mark, stars, img, price, type, fav} = props.card;
   const onMouseOver = props.onMouseover;
-  let starsNum = 0;
-  switch (stars) {
-    case (1):
-      starsNum = `20%`;
-      break;
-    case (2):
-      starsNum = `40%`;
-      break;
-    case (3):
-      starsNum = `60%`;
-      break;
-    case (4):
-      starsNum = `80%`;
-      break;
-    case (5):
-      starsNum = `100%`;
-      break;
-  }
 
 
   return <article className="cities__place-card place-card" onMouseOver={() => {
@@ -35,7 +18,7 @@ const PlaceCard = (props) => {
       </div>
     )}
     <div className="cities__image-wrapper place-card__image-wrapper">
-      <Link to={`offer/${id}`}>
+      <Link to={`/offer/${id}`}>
         <img className="place-card__image" src={img} width="260" height="200"
           alt="Place image"/>
       </Link>
@@ -56,7 +39,7 @@ const PlaceCard = (props) => {
       </div>
       <div className="place-card__rating rating">
         <div className="place-card__stars rating__stars">
-          <span style={{width: starsNum}}></span>
+          <span style={{width: getWidthFromStars(stars)}}></span>
           <span className="visually-hidden">Rating</span>
         </div>
       </div>
