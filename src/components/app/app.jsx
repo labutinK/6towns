@@ -32,7 +32,7 @@ const App = (props) => {
       })}
       <Route path="favorites" element={<WithLayout><Favorites placeCards={props.placeCards.filter((item) => item.fav)}/></WithLayout>} />
       <Route path="login" element={<WithLayout><Login /></WithLayout>} />
-      <Route path="/" element={<WithLayout><Welcome placeCards={props.placeCards}
+      <Route path="/" element={<WithLayout><Welcome towns={props.towns} placeCards={props.placeCards}
         placesFound={props.placesFound} /></WithLayout>} />
       <Route
         path="*"
