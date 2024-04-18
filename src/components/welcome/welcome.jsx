@@ -4,9 +4,15 @@ import {placeCardProps} from "../../proptypes/place-card";
 import OffersList from "../offersList/offersList";
 import Map from "../map/map";
 import CitiesList from "../cities/cities-list";
+import {connect} from "react-redux";
 
 const Welcome = (props) => {
-  const {placeCards, placesFound, towns} = props;
+  const {placeCards, placesFound, towns, currentTown} = props;
+
+
+  const filterCards = (cards) => {
+    return cards.filter((card) => card.city.name === currentTown);
+  };
 
   return <div className="page page--gray page--main">
     {props.children}
@@ -32,10 +38,10 @@ const Welcome = (props) => {
                 <li className="places__option" tabIndex="0">Top rated first</li>
               </ul>
             </form>
-            {<OffersList placeCards={placeCards} className={`cities__places-list places__list tabs__content`}></OffersList>}
+            {<OffersList placeCards={filterCards(placeCards)} className={`cities__places-list places__list tabs__content`}></OffersList>}
           </section>
           <div className="cities__right-section">
-            {<Map placeCards={placeCards} className={`cities__map`}></Map>}
+            {<Map placeCards={filterCards(placeCards)} className={`cities__map`}></Map>}
           </div>
         </div>
       </div>
@@ -43,10 +49,18 @@ const Welcome = (props) => {
   </div>;
 };
 
+const mapStateToProps = (state) => ({
+  placeCards: state.offers,
+  currentTown: state.currentTown
+});
+
+
 Welcome.propTypes = {
   placesFound: PropTypes.number.isRequired,
   placeCards: PropTypes.arrayOf(PropTypes.shape(placeCardProps)),
   children: PropTypes.node,
 };
 
-export default Welcome;
+export {Welcome};
+export default connect(mapStateToProps, null)(Welcome);
+

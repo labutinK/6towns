@@ -5,7 +5,7 @@ function reducer(state, action) {
     case CHANGING_TOWN:
       return {
         ...state,
-        currentTownId: action.payload
+        currentTown: action.payload
       };
     case FILLING_OFFERS:
       return {

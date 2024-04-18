@@ -4,13 +4,13 @@ import {ActionsCreator} from "../../store/actions";
 import {connect} from "react-redux";
 
 const CitiesList = (props) => {
-  const {items, currentTownId, setCurrentCity} = props;
+  const {items, currentTown, setCurrentCity} = props;
 
-  const [activeLocal, setActiveLocal] = useState(currentTownId);
+  const [activeLocal, setActiveLocal] = useState(currentTown);
 
   useEffect(() => {
-    setActiveLocal(currentTownId);
-  }, [currentTownId]);
+    setActiveLocal(currentTown);
+  }, [currentTown]);
 
   return <>
     <h1 className="visually-hidden">Cities</h1>
@@ -22,10 +22,10 @@ const CitiesList = (props) => {
               {items.map((city) => {
                 return <li key={city.id} className='locations__item'
                   onClick={() => {
-                    setCurrentCity(city.id);
+                    setCurrentCity(city.name);
                   }}
                 >
-                  <a className={`locations__item-link tabs__item ${city.id === activeLocal && `tabs__item--active`}`}
+                  <a className={`locations__item-link tabs__item ${city.name === activeLocal && `tabs__item--active`}`}
                     href="#">
                     <span>{city.name}</span>
                   </a>
@@ -40,12 +40,12 @@ const CitiesList = (props) => {
 };
 
 const mapStateToProps = (state) => ({
-  currentTownId: state.currentTownId,
+  currentTown: state.currentTown,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  setCurrentCity(cityId) {
-    dispatch(ActionsCreator.townChange(cityId));
+  setCurrentCity(cityName) {
+    dispatch(ActionsCreator.townChange(cityName));
   },
 });
 

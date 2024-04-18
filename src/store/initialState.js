@@ -1,5 +1,5 @@
 export const initialState = {
-  currentTownId: 1,
+  currentTown: `Paris`,
   offers: [
     {
       "id": 1,
