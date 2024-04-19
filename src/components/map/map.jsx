@@ -1,18 +1,21 @@
-import React from "react";
+import React, {useEffect} from "react";
 import PropTypes from "prop-types";
 import "leaflet/dist/leaflet.css";
 import leaflet from "leaflet";
 import {placeCardProps} from "../../proptypes/place-card";
 
 const Map = (props) => {
-  const {placeCards, className, circle} = props;
+  const {placeCards, className, circle, hoverOfferId} = props;
   const mapRef = React.createRef();
+  const markersRef = React.useRef([]);
+  const mapInstanceRef = React.useRef();
 
   React.useEffect(() => {
     const city = [52.38333, 4.9];
-    const icon = leaflet.icon({iconUrl: `img/pin.svg`, iconSize: [30, 30]});
     const zoom = 12;
+    const icon = leaflet.icon({iconUrl: `img/pin.svg`, iconSize: [30, 30]});
     const map = leaflet.map(mapRef.current, {center: city, zoom, zoomControl: false, marker: true});
+    mapInstanceRef.current = map;
     map.setView(city, zoom);
     leaflet.tileLayer(`https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png`,
         {attribution: `© OpenStreetMap contributors © CARTO`}).addTo(map);
@@ -27,15 +30,55 @@ const Map = (props) => {
 
     placeCards.map((card) => {
       if (card.location) {
-        leaflet.marker([card.location.latitude, card.location.longitude], {icon}).addTo(map);
+        const marker = leaflet.marker([card.location.latitude, card.location.longitude], {icon}).addTo(map);
+        markersRef.current.push(marker); // Сохраняем ссылки на маркеры в массив ref
       }
     });
 
     return () => {
       map.remove();
+      markersRef.current.forEach((marker) => {
+        marker.remove();
+      });
+      markersRef.current = [];
     };
 
-  });
+  }, [placeCards]);
+
+  useEffect(() => {
+    if (hoverOfferId !== 0) {
+      markersRef.current.forEach((marker) => {
+        marker.remove();
+      });
+      markersRef.current = []; // О
+      placeCards.map((card) => {
+        if (card.location) {
+          let icon;
+          if (card.id === hoverOfferId) {
+            icon = leaflet.icon({iconUrl: `img/pin-active.svg`, iconSize: [30, 30]});
+          } else {
+            icon = leaflet.icon({iconUrl: `img/pin.svg`, iconSize: [30, 30]});
+          }
+          const marker = leaflet.marker([card.location.latitude, card.location.longitude], {icon}).addTo(mapInstanceRef.current);
+          markersRef.current.push(marker); // Сохраняем ссылки на маркеры в массив ref
+        }
+      });
+    }
+
+    return () => {
+      markersRef.current.forEach((marker) => {
+        marker.remove();
+      });
+      markersRef.current = [];
+      placeCards.map((card) => {
+        if (card.location) {
+          const icon = leaflet.icon({iconUrl: `img/pin.svg`, iconSize: [30, 30]});
+          const marker = leaflet.marker([card.location.latitude, card.location.longitude], {icon}).addTo(mapInstanceRef.current);
+          markersRef.current.push(marker); // Сохраняем ссылки на маркеры в массив ref
+        }
+      });
+    };
+  }, [hoverOfferId]);
 
 
   return (

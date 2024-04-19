@@ -7,9 +7,10 @@ import {getWidthFromStars} from "../../utils/utils";
 const PlaceCard = (props) => {
   const {id, name, isPremium, stars, img, price, type, isFavorite} = props.card;
   const onMouseOver = props.onMouseover;
+  const onMouseLeve = props.onMouseLeave;
 
 
-  return <article className="cities__place-card place-card" onMouseOver={() => {
+  return <article className="cities__place-card place-card" onMouseLeave={onMouseLeve} onMouseOver={() => {
     onMouseOver(id);
   }}>
     {isPremium && (
@@ -57,6 +58,7 @@ const PlaceCard = (props) => {
 
 PlaceCard.propTypes = {
   onMouseover: PropTypes.func,
+  onMouseLeave: PropTypes.func,
   card: PropTypes.shape(placeCardProps)
 };
 

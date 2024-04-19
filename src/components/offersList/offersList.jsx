@@ -4,18 +4,22 @@ import {placeCardProps} from "../../proptypes/place-card";
 import PlaceCard from "../placeCard/placeCard";
 
 const OffersList = (props) => {
-  const {placeCards, className} = props;
-  const [activeEl, setActiveEl] = React.useState(0);
+  const {placeCards, className, hoverHandler} = props;
   mouseOnOfferHandler.bind(mouseOnOfferHandler);
 
   function mouseOnOfferHandler(id) {
-    setActiveEl(id);
+    hoverHandler(id);
+  }
+  function mouseOutOfferHandler() {
+    hoverHandler(0);
   }
 
   return <div className={`${className}`}>
     {placeCards.map((card, i) => {
       return <PlaceCard card={card} key={card.id + i}
-        onMouseover={mouseOnOfferHandler}></PlaceCard>;
+        onMouseover={mouseOnOfferHandler}
+        onMouseLeave={mouseOutOfferHandler}
+      ></PlaceCard>;
     })}
   </div>;
 };
