@@ -1,8 +1,7 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import PropTypes from 'prop-types';
 import {placeCardProps} from "../../proptypes/place-card";
 import PlaceCard from "../placeCard/placeCard";
-import {connect} from "react-redux";
 
 const OffersList = (props) => {
   const {placeCards, className} = props;
@@ -23,6 +22,7 @@ const OffersList = (props) => {
 
 OffersList.propTypes = {
   placeCards: PropTypes.arrayOf(PropTypes.shape(placeCardProps)),
+  className: PropTypes.string,
 };
 
 export default OffersList;

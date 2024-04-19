@@ -7,12 +7,7 @@ import CitiesList from "../cities/cities-list";
 import {connect} from "react-redux";
 
 const Welcome = (props) => {
-  const {placeCards, placesFound, towns, currentTown} = props;
-
-
-  const filterCards = (cards) => {
-    return cards.filter((card) => card.city.name === currentTown);
-  };
+  const {placeCards, towns, currentTown} = props;
 
   return <div className="page page--gray page--main">
     {props.children}
@@ -22,7 +17,7 @@ const Welcome = (props) => {
         <div className="cities__places-container container">
           <section className="cities__places places">
             <h2 className="visually-hidden">Places</h2>
-            <b className="places__found">{placesFound} places to stay in Amsterdam</b>
+            <b className="places__found">{placeCards.length} places to stay in {currentTown}</b>
             <form className="places__sorting" action="#" method="get">
               <span className="places__sorting-caption">Sort by</span>
               <span className="places__sorting-type" tabIndex="0">
@@ -38,10 +33,11 @@ const Welcome = (props) => {
                 <li className="places__option" tabIndex="0">Top rated first</li>
               </ul>
             </form>
-            {<OffersList placeCards={filterCards(placeCards)} className={`cities__places-list places__list tabs__content`}></OffersList>}
+            {<OffersList placeCards={placeCards}
+              className={`cities__places-list places__list tabs__content`}></OffersList>}
           </section>
           <div className="cities__right-section">
-            {<Map placeCards={filterCards(placeCards)} className={`cities__map`}></Map>}
+            {<Map placeCards={placeCards} className={`cities__map`}></Map>}
           </div>
         </div>
       </div>
@@ -49,18 +45,16 @@ const Welcome = (props) => {
   </div>;
 };
 
-const mapStateToProps = (state) => ({
-  placeCards: state.offers,
-  currentTown: state.currentTown
-});
-
 
 Welcome.propTypes = {
-  placesFound: PropTypes.number.isRequired,
   placeCards: PropTypes.arrayOf(PropTypes.shape(placeCardProps)),
   children: PropTypes.node,
+  currentTown: PropTypes.string.isRequired,
+  towns: PropTypes.arrayOf(PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    id: PropTypes.number.isRequired
+  }))
 };
 
-export {Welcome};
-export default connect(mapStateToProps, null)(Welcome);
+export default Welcome;
 

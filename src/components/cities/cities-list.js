@@ -50,7 +50,14 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 
-CitiesList.propTypes = {};
+CitiesList.propTypes = {
+  currentTown: PropTypes.string.isRequired,
+  setCurrentCity: PropTypes.func,
+  items: PropTypes.arrayOf(PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    id: PropTypes.number.isRequired
+  }))
+};
 
 export {CitiesList};
 export default connect(mapStateToProps, mapDispatchToProps)(CitiesList);

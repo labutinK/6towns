@@ -5,14 +5,14 @@ import {Link} from "react-router-dom";
 import {getWidthFromStars} from "../../utils/utils";
 
 const PlaceCard = (props) => {
-  const {id, name, mark, stars, img, price, type, fav} = props.card;
+  const {id, name, isPremium, stars, img, price, type, isFavorite} = props.card;
   const onMouseOver = props.onMouseover;
 
 
   return <article className="cities__place-card place-card" onMouseOver={() => {
     onMouseOver(id);
   }}>
-    {mark && (
+    {isPremium && (
       <div className="place-card__mark">
         <span>Premium</span>
       </div>
@@ -29,7 +29,7 @@ const PlaceCard = (props) => {
           <b className="place-card__price-value">&euro;{price}</b>
           <span className="place-card__price-text">&#47;&nbsp;night</span>
         </div>
-        <button className={`place-card__bookmark-button button ${fav && `place-card__bookmark-button--active`}`}
+        <button className={`place-card__bookmark-button button ${isFavorite && `place-card__bookmark-button--active`}`}
           type="button">
           <svg className="place-card__bookmark-icon" width="18" height="19">
             <use xlinkHref="#icon-bookmark"></use>

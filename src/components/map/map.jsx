@@ -26,8 +26,8 @@ const Map = (props) => {
     }
 
     placeCards.map((card) => {
-      if (card.coords) {
-        leaflet.marker(card.coords, {icon}).addTo(map);
+      if (card.location) {
+        leaflet.marker([card.location.latitude, card.location.longitude], {icon}).addTo(map);
       }
     });
 

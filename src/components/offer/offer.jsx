@@ -13,13 +13,13 @@ const Offer = (props) => {
   const {
     features,
     host,
-    whatsInside,
+    goods,
     name,
-    photos,
+    images,
     coords,
     price,
     stars,
-    mark,
+    isPremium,
     fav
   } = props.card;
   const reviews = props.reviews;
@@ -47,11 +47,11 @@ const Offer = (props) => {
     {props.children}
     <main className="page__main page__main--property">
       <section className="property">
-        {photos.length > 0 && (
+        {images.length > 0 && (
           <div className="property__gallery-container container">
             <div className="property__gallery">
               {
-                photos.map((photo, ind) => (
+                images.map((photo, ind) => (
                   <div key={ind} className="property__image-wrapper">
                     <img className="property__image" src={photo} alt="Photo studio"/>
                   </div>
@@ -62,7 +62,7 @@ const Offer = (props) => {
         )}
         <div className="property__container container">
           <div className="property__wrapper">
-            {mark && (<div className="property__mark"><span>Premium</span></div>)}
+            {isPremium && (<div className="property__mark"><span>Premium</span></div>)}
             <div className="property__name-wrapper">
               <h1 className="property__name">
                 {name}
@@ -83,11 +83,11 @@ const Offer = (props) => {
               <b className="property__price-value">&euro;{price}</b>
               <span className="property__price-text">&nbsp;night</span>
             </div>
-            {whatsInside.length > 0 && (
+            {goods.length > 0 && (
               <div className="property__inside">
                 <h2 className="property__inside-title">What&apos;s inside</h2>
                 <ul className="property__inside-list">
-                  {whatsInside.map((feature) => (
+                  {goods.map((feature) => (
                     <li key={feature} className="property__inside-item">
                       {feature}
                     </li>

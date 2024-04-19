@@ -9,14 +9,30 @@ import Offer from "../offer/offer";
 import {Link} from "react-router-dom";
 import {ReviewCardProps} from "../../proptypes/review-card";
 import {placeCardProps} from "../../proptypes/place-card";
+import {connect} from "react-redux";
 
 const App = (props) => {
+  const {placeCards, currentTown, towns} = props;
+
+  const filterCities = (cities) => {
+    return cities.filter(({name}) => {
+      return placeCards.find((el) => {
+        return el.city.name === name;
+      }) && true;
+    });
+  };
+
+
+  const filterCards = (cards) => {
+    return cards.filter((card) => card.city.name === currentTown);
+  };
+
   return <BrowserRouter>
     <Routes>
-      {props.placeCards.map((card) => {
+      {placeCards.map((card) => {
         const id = card.id;
         let reviewsOfThisCard = props.reviews[id];
-        let others = props.placeCards.filter((placeCard) => {
+        let others = placeCards.filter((placeCard) => {
           return placeCard.id !== id; // используем others после его объявления
         });
         if (others.length > 3) { // проверяем длину отфильтрованного массива
@@ -26,21 +42,24 @@ const App = (props) => {
           <Route
             key={id} // Уникальный ключ для каждого маршрута
             path={`offer/${card.id}`} // Путь для маршрута
-            element={<WithLayout><Offer reviews={reviewsOfThisCard ? reviewsOfThisCard : []} card={card} others={others} /></WithLayout>} // Передаем оффер в компонент Offer
+            element={<WithLayout><Offer reviews={reviewsOfThisCard ? reviewsOfThisCard : []} card={card}
+              others={others}/></WithLayout>} // Передаем оффер в компонент Offer
           />
         );
       })}
-      <Route path="favorites" element={<WithLayout><Favorites placeCards={props.placeCards.filter((item) => item.fav)}/></WithLayout>} />
-      <Route path="login" element={<WithLayout><Login /></WithLayout>} />
-      <Route path="/" element={<WithLayout><Welcome towns={props.towns}
-        placesFound={props.placesFound} /></WithLayout>} />
+      <Route path="favorites"
+        element={<WithLayout><Favorites
+          placeCards={props.placeCards.filter((item) => item.isFavorite)}/></WithLayout>}/>
+      <Route path="login" element={<WithLayout><Login/></WithLayout>}/>
+      <Route path="/" element={<WithLayout><Welcome towns={filterCities(towns)} currentTown={currentTown}
+        placeCards={filterCards(placeCards)}/></WithLayout>}/>
       <Route
         path="*"
         element={
           <WithLayout>
             <section className="error">
               <div className="container">
-                <h1>404. <br /><small>Page not found</small></h1>
+                <h1>404. <br/><small>Page not found</small></h1>
                 <Link to="/">Go to main page</Link>
               </div>
             </section>
@@ -52,10 +71,21 @@ const App = (props) => {
 
 };
 
+const mapStateToProps = (state) => ({
+  placeCards: state.offers,
+  currentTown: state.currentTown,
+});
+
 App.propTypes = {
-  placesFound: PropTypes.number.isRequired,
   reviews: PropTypes.objectOf(PropTypes.arrayOf(PropTypes.shape(ReviewCardProps))),
-  placeCards: PropTypes.arrayOf(PropTypes.shape(placeCardProps))
+  placeCards: PropTypes.arrayOf(PropTypes.shape(placeCardProps)),
+  currentTown: PropTypes.string.isRequired,
+  towns: PropTypes.arrayOf(PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    id: PropTypes.number.isRequired
+  }))
 };
 
-export default App;
+export {App};
+export default connect(mapStateToProps, null)(App);
+

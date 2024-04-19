@@ -7,20 +7,24 @@ export const initialState = {
       "city": {
         "name": `Amsterdam`
       },
-      "mark": false,
+      "isPremium": false,
       "stars": 4,
       "img": `./img/apartment-01.jpg`,
       "price": 120,
       "type": `Apartment`,
-      "coords": [`52.3909553943508`, `4.85309666406198`],
-      "photos": [
+      "location": {
+        "latitude": 52.3909553943508,
+        "longitude": 4.85309666406198,
+        "zoom": 8
+      },
+      "images": [
         `img/room.jpg`,
         `img/apartment-01.jpg`,
         `img/apartment-03.jpg`,
         `img/studio-01.jpg`,
         `img/apartment-01.jpg`,
       ],
-      "whatsInside": [
+      "goods": [
         `Wi-Fi`,
         `Washing machine`,
         `Towels`,
@@ -32,7 +36,7 @@ export const initialState = {
         `Cabel TV`,
         `Fridge`,
       ],
-      "fav": true,
+      "isFavorite": true,
       "host": {
         id: 2,
         name: `Angelina`,
@@ -61,7 +65,7 @@ export const initialState = {
     {
       "id": 2,
       "name": `Wood and stone place`,
-      "mark": true,
+      "isPremium": true,
       "city": {
         "name": `Paris`
       },
@@ -69,13 +73,17 @@ export const initialState = {
       "img": `./img/room.jpg`,
       "price": 80,
       "type": `Private room`,
-      "coords": [`52.369553943508`, `4.85309666406198`],
-      "photos": [
+      "location": {
+        "latitude": 52.369553943508,
+        "longitude": 4.85309666406198,
+        "zoom": 8
+      },
+      "images": [
         `img/room.jpg`,
         `img/apartment-03.jpg`,
         `img/apartment-01.jpg`,
       ],
-      "whatsInside": [
+      "goods": [
         `Wi-Fi`,
         `Towels`,
         `Kitchen`,
@@ -83,7 +91,7 @@ export const initialState = {
         `Cabel TV`,
         `Fridge`,
       ],
-      "fav": true,
+      "isFavorite": true,
       "host": {
         id: 1,
         name: `Max`,
@@ -107,7 +115,7 @@ export const initialState = {
           type: `canliveamount`,
           text: `Max 3 adults`,
         }
-      ]
+      ],
     },
     {
       "id": 3,
@@ -115,26 +123,30 @@ export const initialState = {
       "city": {
         "name": `Hamburg`
       },
-      "mark": false,
+      "isPremium": false,
       "stars": 5,
       "img": `./img/apartment-02.jpg`,
       "price": 132,
       "type": `Apartment`,
-      "coords": [`52.3909553943508`, `4.929309666406198`],
-      "photos": [
+      "location": {
+        "latitude": 52.3909553943508,
+        "longitude": 4.929309666406198,
+        "zoom": 8
+      },
+      "images": [
         `img/apartment-02.jpg`,
         `img/apartment-03.jpg`,
         `img/studio-01.jpg`,
         `img/apartment-01.jpg`,
       ],
-      "whatsInside": [
+      "goods": [
         `Washing machine`,
         `Heating`,
         `Baby seat`,
         `Dishwasher`,
         `Fridge`,
       ],
-      "fav": true,
+      "isFavorite": false,
       "host": {
         id: 3,
         name: `Angelina`,
@@ -158,12 +170,12 @@ export const initialState = {
           type: `canliveamount`,
           text: `Max 3 adults`,
         }
-      ]
+      ],
     },
     {
       "id": 4,
       "name": `Nice, cozy, warm big bed apartment`,
-      "mark": true,
+      "isPremium": true,
       "stars": 4,
       "city": {
         "name": `Dusseldorf`
@@ -171,18 +183,22 @@ export const initialState = {
       "img": `./img/apartment-03.jpg`,
       "price": 180,
       "type": `Apartment`,
-      "coords": [`52.3809553943508`, `4.939309666406198`],
-      "photos": [
+      "location": {
+        "latitude": 52.3809553943508,
+        "longitude": 4.939309666406198,
+        "zoom": 8
+      },
+      "images": [
         `img/apartment-02.jpg`,
         `img/studio-01.jpg`,
         `img/apartment-01.jpg`,
       ],
-      "whatsInside": [
+      "goods": [
         `Washing machine`,
         `Baby seat`,
         `Fridge`,
       ],
-      "fav": true,
+      "isFavorite": true,
       "host": {
         id: 2,
         name: `Angelina`,
@@ -206,12 +222,12 @@ export const initialState = {
           type: `canliveamount`,
           text: `Max 3 adults`,
         }
-      ]
+      ],
     },
     {
       "id": 7,
       "name": `Nice, cozy, warm big bed apartment`,
-      "mark": true,
+      "isPremium": true,
       "stars": 4,
       "city": {
         "name": `Paris`
@@ -219,18 +235,22 @@ export const initialState = {
       "img": `./img/apartment-03.jpg`,
       "price": 180,
       "type": `Apartment`,
-      "coords": [`52.3809553943508`, `4.939309666406198`],
-      "photos": [
+      "location": {
+        "latitude": 52.3809553943508,
+        "longitude": 4.939309666406198,
+        "zoom": 8
+      },
+      "images": [
         `img/apartment-02.jpg`,
         `img/studio-01.jpg`,
         `img/apartment-01.jpg`,
       ],
-      "whatsInside": [
+      "goods": [
         `Washing machine`,
         `Baby seat`,
         `Fridge`,
       ],
-      "fav": true,
+      "isFavorite": true,
       "host": {
         id: 2,
         name: `Angelina`,
@@ -254,7 +274,7 @@ export const initialState = {
           type: `canliveamount`,
           text: `Max 3 adults`,
         }
-      ]
+      ],
     },
   ]
 };
