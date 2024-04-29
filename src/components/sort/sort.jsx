@@ -1,14 +1,13 @@
 import React, {useEffect} from "react";
 import PropTypes from 'prop-types';
-
-const ACTIVE_SORT_ID = 1;
+import {connect} from "react-redux";
+import {ActionsCreator} from "../../store/actions";
 
 const Sort = (props) => {
-  const {items, changeHandler} = props;
+  const {items, setSorter, sort} = props;
 
   const listRef = React.createRef();
   const [opened, setOpened] = React.useState(false);
-  const [activeSort, setSort] = React.useState(ACTIVE_SORT_ID);
 
   const toggleOpened = () => {
     setOpened(!opened);
@@ -32,12 +31,16 @@ const Sort = (props) => {
     };
   });
 
+  const getKeyByValue = (object, value) => {
+    return Object.keys(object).find((key) => object[key] === value);
+  };
+
   return (
     <form className="places__sorting" action="#" method="get">
       <span className="places__sorting-caption">Sort by</span>
       <span className="places__sorting-type" tabIndex="0" onClick={toggleOpened}>
-        {items.map((item) => {
-          if (item.id === activeSort) {
+        {Object.values(items).map((item) => {
+          if (getKeyByValue(items, item) === sort) {
             return item.name;
           }
         })}
@@ -47,11 +50,10 @@ const Sort = (props) => {
       </span>
       <ul className={`places__options places__options--custom ${opened ? `places__options--opened` : ``}`}
         ref={listRef}>
-        {items.map((item) => (
-          <li key={item.id} className={`places__option ${item.id === activeSort && `places__option--active`}`}
+        {Object.values(items).map((item) => (
+          <li key={item.id} className={`places__option ${item.id === sort && `places__option--active`}`}
             onClick={() => {
-              setSort(item.id);
-              changeHandler(item.id);
+              setSorter(getKeyByValue(items, item));
               setOpened(false);
             }}
             tabIndex={item.id}>
@@ -63,4 +65,21 @@ const Sort = (props) => {
   );
 };
 
-export default Sort;
+const mapStateToProps = (state) => ({
+  sort: state.sort
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  setSorter: (sort) => {
+    dispatch(ActionsCreator.sortChange(sort));
+  }
+});
+
+Sort.propTypes = {
+  items: PropTypes.object,
+  setSorter: PropTypes.func,
+  sort: PropTypes.string
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Sort);
+

@@ -1,4 +1,4 @@
-import {CHANGING_TOWN, FILLING_OFFERS} from "./actions";
+import {CHANGING_TOWN, FILLING_OFFERS, SORT_OFFERS, HOVER_OFFER_CHANGE} from "./actions";
 
 function reducer(state, action) {
   switch (action.type) {
@@ -11,6 +11,16 @@ function reducer(state, action) {
       return {
         ...state,
         offers: action.payload
+      };
+    case SORT_OFFERS:
+      return {
+        ...state,
+        sort: action.payload
+      };
+    case HOVER_OFFER_CHANGE:
+      return {
+        ...state,
+        hoverOfferId: action.payload
       };
     default:
       return state;

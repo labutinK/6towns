@@ -1,5 +1,9 @@
+import {POPULAR_SORT} from "../const/const";
+
 export const initialState = {
   currentTown: `Paris`,
+  sort: POPULAR_SORT,
+  hoverOfferId: 0,
   offers: [
     {
       "id": 1,

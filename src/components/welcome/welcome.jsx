@@ -5,25 +5,13 @@ import OffersList from "../offersList/offersList";
 import Map from "../map/map";
 import CitiesList from "../cities/cities-list";
 import Sort from "../sort/sort";
-import {SORT_TYPES} from "../../const/const";
+import {SORTS} from "../../const/const";
+import {connect} from "react-redux";
 
 const Welcome = (props) => {
-  const {placeCards, towns, currentTown} = props;
+  const {placeCards, towns, currentTown, sort, currentHoverOfferId} = props;
 
   const [offers, setNewOffers] = React.useState(placeCards);
-  const [hoverOfferId, setHoverOffer] = React.useState(0);
-
-  const sortFunction = (newSortId) => {
-    const foundSortType = SORT_TYPES.find((sortType) => sortType.id === newSortId);
-    const sortedOffers = foundSortType.sortFunc([...placeCards]); // Создаем копию массива placeCards
-    if (!arraysAreEqual(offers, sortedOffers)) {
-      setNewOffers(sortedOffers);
-    }
-  };
-
-  const hoverHandler = (offer) => {
-    setHoverOffer(offer);
-  };
 
   const arraysAreEqual = (arr1, arr2) => {
     for (let i = 0; i < arr1.length; i++) {
@@ -35,8 +23,11 @@ const Welcome = (props) => {
   };
 
   useEffect(() => {
-    setNewOffers(placeCards);
-  }, [placeCards]);
+    const sortedOffers = SORTS[sort] && SORTS[sort].sortFunc([...placeCards]);
+    if (!arraysAreEqual(offers, sortedOffers)) {
+      setNewOffers(sortedOffers);
+    }
+  }, [sort, currentTown]);
 
   return <div className="page page--gray page--main">
     {props.children}
@@ -47,18 +38,23 @@ const Welcome = (props) => {
           <section className="cities__places places">
             <h2 className="visually-hidden">Places</h2>
             <b className="places__found">{offers.length} places to stay in {currentTown}</b>
-            <Sort items={SORT_TYPES} changeHandler={sortFunction}></Sort>
-            {<OffersList placeCards={offers} hoverHandler={hoverHandler}
+            <Sort items={SORTS}></Sort>
+            {<OffersList placeCards={offers}
               className={`cities__places-list places__list tabs__content`}></OffersList>}
           </section>
           <div className="cities__right-section">
-            {<Map hoverOfferId={hoverOfferId} placeCards={offers} className={`cities__map`}></Map>}
+            {<Map hoverOfferId={currentHoverOfferId} placeCards={offers} className={`cities__map`}></Map>}
           </div>
         </div>
       </div>
     </main>
   </div>;
 };
+
+const mapStateToProps = (state) => ({
+  sort: state.sort,
+  currentHoverOfferId: state.hoverOfferId
+});
 
 
 Welcome.propTypes = {
@@ -68,8 +64,9 @@ Welcome.propTypes = {
   towns: PropTypes.arrayOf(PropTypes.shape({
     name: PropTypes.string.isRequired,
     id: PropTypes.number.isRequired
-  }))
+  })),
+  sort: PropTypes.string
 };
 
-export default Welcome;
+export default connect(mapStateToProps)(Welcome);
 
