@@ -7,9 +7,11 @@ import CitiesList from "../cities/cities-list";
 import Sort from "../sort/sort";
 import {SORTS} from "../../const/const";
 import {connect} from "react-redux";
+import {ApiActionsCreator} from "../../store/api-actions";
+import LoadingScreen from "../loading-screen/loading-screen";
 
 const Welcome = (props) => {
-  const {placeCards, towns, currentTown, sort, currentHoverOfferId} = props;
+  const {placeCards, towns, currentTown, sort, isDataLoaded, onLoadData} = props;
 
   const [offers, setNewOffers] = React.useState(placeCards);
 
@@ -23,11 +25,22 @@ const Welcome = (props) => {
   };
 
   useEffect(() => {
+    if (!isDataLoaded) {
+      onLoadData();
+    }
+  }, [isDataLoaded]);
+
+  useEffect(() => {
     const sortedOffers = SORTS[sort] && SORTS[sort].sortFunc([...placeCards]);
     if (!arraysAreEqual(offers, sortedOffers)) {
       setNewOffers(sortedOffers);
     }
   }, [sort, currentTown]);
+
+
+  if (!isDataLoaded) {
+    return <LoadingScreen></LoadingScreen>;
+  }
 
   return <div className="page page--gray page--main">
     {props.children}
@@ -43,7 +56,7 @@ const Welcome = (props) => {
               className={`cities__places-list places__list tabs__content`}></OffersList>}
           </section>
           <div className="cities__right-section">
-            {<Map hoverOfferId={currentHoverOfferId} placeCards={offers} className={`cities__map`}></Map>}
+            {<Map placeCards={offers} className={`cities__map`}></Map>}
           </div>
         </div>
       </div>
@@ -53,7 +66,14 @@ const Welcome = (props) => {
 
 const mapStateToProps = (state) => ({
   sort: state.sort,
-  currentHoverOfferId: state.hoverOfferId
+  currentHoverOfferId: state.hoverOfferId,
+  isDataLoaded: state.isDataLoaded,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  async onLoadData() {
+    dispatch(ApiActionsCreator.getOffers());
+  },
 });
 
 
@@ -68,5 +88,5 @@ Welcome.propTypes = {
   sort: PropTypes.string
 };
 
-export default connect(mapStateToProps)(Welcome);
+export default connect(mapStateToProps, mapDispatchToProps)(Welcome);
 

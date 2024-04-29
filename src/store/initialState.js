@@ -4,6 +4,7 @@ export const initialState = {
   currentTown: `Paris`,
   sort: POPULAR_SORT,
   hoverOfferId: 0,
+  isDataLoaded: false,
   offers: [
     {
       "id": 1,

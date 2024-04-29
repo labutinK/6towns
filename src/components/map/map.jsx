@@ -3,9 +3,11 @@ import PropTypes from "prop-types";
 import "leaflet/dist/leaflet.css";
 import leaflet from "leaflet";
 import {placeCardProps} from "../../proptypes/place-card";
+import {connect} from "react-redux";
+import {ActionsCreator} from "../../store/actions";
 
 const Map = (props) => {
-  const {placeCards, className, circle, hoverOfferId} = props;
+  const {placeCards, className, circle, hoverOfferId, resetHoverId} = props;
   const mapRef = React.createRef();
   const markersRef = React.useRef([]);
   const mapInstanceRef = React.useRef();
@@ -36,48 +38,33 @@ const Map = (props) => {
     });
 
     return () => {
-      map.remove();
+      mapInstanceRef.current.remove();
       markersRef.current.forEach((marker) => {
         marker.remove();
       });
       markersRef.current = [];
+      resetHoverId();
     };
 
   }, [placeCards]);
 
   useEffect(() => {
-    if (hoverOfferId !== 0) {
-      markersRef.current.forEach((marker) => {
-        marker.remove();
-      });
-      markersRef.current = []; // О
-      placeCards.map((card) => {
-        if (card.location) {
-          let icon;
-          if (card.id === hoverOfferId) {
-            icon = leaflet.icon({iconUrl: `img/pin-active.svg`, iconSize: [30, 30]});
-          } else {
-            icon = leaflet.icon({iconUrl: `img/pin.svg`, iconSize: [30, 30]});
-          }
-          const marker = leaflet.marker([card.location.latitude, card.location.longitude], {icon}).addTo(mapInstanceRef.current);
-          markersRef.current.push(marker); // Сохраняем ссылки на маркеры в массив ref
+    markersRef.current.forEach((marker) => {
+      marker.remove();
+    });
+    markersRef.current = []; // О
+    placeCards.map((card) => {
+      if (card.location) {
+        let icon;
+        if (card.id === hoverOfferId) {
+          icon = leaflet.icon({iconUrl: `img/pin-active.svg`, iconSize: [30, 30]});
+        } else {
+          icon = leaflet.icon({iconUrl: `img/pin.svg`, iconSize: [30, 30]});
         }
-      });
-    }
-
-    return () => {
-      markersRef.current.forEach((marker) => {
-        marker.remove();
-      });
-      markersRef.current = [];
-      placeCards.map((card) => {
-        if (card.location) {
-          const icon = leaflet.icon({iconUrl: `img/pin.svg`, iconSize: [30, 30]});
-          const marker = leaflet.marker([card.location.latitude, card.location.longitude], {icon}).addTo(mapInstanceRef.current);
-          markersRef.current.push(marker); // Сохраняем ссылки на маркеры в массив ref
-        }
-      });
-    };
+        const marker = leaflet.marker([card.location.latitude, card.location.longitude], {icon}).addTo(mapInstanceRef.current);
+        markersRef.current.push(marker); // Сохраняем ссылки на маркеры в массив ref
+      }
+    });
   }, [hoverOfferId]);
 
 
@@ -95,6 +82,20 @@ Map.propTypes = {
   placeCards: PropTypes.arrayOf(PropTypes.shape(placeCardProps)),
   className: PropTypes.string,
   circle: PropTypes.arrayOf(PropTypes.string),
+  hoverOfferId: PropTypes.number,
+  resetHoverId: PropTypes.func
 };
 
-export default Map;
+const mapStateToProps = (state) => ({
+  hoverOfferId: state.hoverOfferId,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  resetHoverId: () => {
+    dispatch(ActionsCreator.hoverOfferId(0));
+  }
+});
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Map);
+

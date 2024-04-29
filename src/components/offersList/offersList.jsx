@@ -6,11 +6,13 @@ import {ActionsCreator} from "../../store/actions";
 import {connect} from "react-redux";
 
 const OffersList = (props) => {
-  const {placeCards, className, setNewHoverOffer} = props;
+  const {placeCards, className, hoverOfferId, setNewHoverOffer} = props;
   mouseOnOfferHandler.bind(mouseOnOfferHandler);
 
   function mouseOnOfferHandler(id) {
-    setNewHoverOffer(id);
+    if (hoverOfferId !== id) {
+      setNewHoverOffer(id);
+    }
   }
 
   function mouseOutOfferHandler() {
@@ -34,10 +36,14 @@ OffersList.propTypes = {
   setNewHoverOffer: PropTypes.func
 };
 
+const mapStateToProps = (state) => ({
+  hoverOfferId: state.hoverOfferId
+});
+
 const mapDispatchToProprs = (dispatch) => ({
   setNewHoverOffer: (id) => {
     dispatch(ActionsCreator.hoverOfferId(id));
   }
 });
 
-export default connect(null, mapDispatchToProprs)(OffersList);
+export default connect(mapStateToProps, mapDispatchToProprs)(OffersList);

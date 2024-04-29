@@ -11,7 +11,6 @@ const topRatedSort = (cards) => {
   return cards.sort((a, b) => b.stars - a.stars);
 };
 
-
 export const POPULAR_SORT = `POPULAR_SORT`;
 export const PRICE_TO_HIGH_SORT = `PRICE_TO_HIGH_SORT`;
 export const PRICE_TO_LOW_SORT = `PRICE_TO_LOW_SORT`;
@@ -39,4 +38,7 @@ export const SORTS = {
       name: `Top rated first`,
       sortFunc: topRatedSort
     }
+};
+
+export const API_ROUTES = {
 };
