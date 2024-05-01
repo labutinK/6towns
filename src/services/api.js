@@ -2,7 +2,7 @@ import axios from "axios";
 
 const REQUEST_TIMEOUT = 5000;
 
-const BACKEND_URL = `https://14.ecmascript.htmlacademy.pro/big-trip/`;
+const BACKEND_URL = `https://6.react.htmlacademy.pro/six-cities`;
 
 const HttpCode = {
   UNAUTHORIZED: 401
@@ -12,7 +12,7 @@ export const createAPI = () => {
   const api = axios.create({
     "baseURL": BACKEND_URL,
     "timeout": REQUEST_TIMEOUT,
-    "headers": {'Authorization': `Basic sada2fsdgssa#5`}
+    "headers": {'withCredentials': true}
   });
 
   const onSuccess = (response) => response;

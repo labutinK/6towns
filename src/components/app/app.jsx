@@ -10,49 +10,39 @@ import {Link} from "react-router-dom";
 import {ReviewCardProps} from "../../proptypes/review-card";
 import {placeCardProps} from "../../proptypes/place-card";
 import {connect} from "react-redux";
+import {ApiActionsCreator} from "../../store/api-actions";
+import {ActionsCreator} from "../../store/actions";
 
 const App = (props) => {
-  const {placeCards, currentTown, towns} = props;
-
-  const filterCities = (cities) => {
-    return cities.filter(({name}) => {
-      return placeCards.find((el) => {
-        return el.city.name === name;
-      }) && true;
-    });
-  };
-
-
-  const filterCards = (cards) => {
-    return cards.filter((card) => card.city.name === currentTown);
-  };
-
+  const {placeCards} = props;
   return <BrowserRouter>
     <Routes>
-      {placeCards.map((card) => {
-        const id = card.id;
-        let reviewsOfThisCard = props.reviews[id];
-        let others = placeCards.filter((placeCard) => {
-          return placeCard.id !== id; // используем others после его объявления
-        });
-        if (others.length > 3) { // проверяем длину отфильтрованного массива
-          others = others.slice(0, 3); // если длина больше 3, обрезаем массив до первых трёх элементов
-        }
-        return (
-          <Route
-            key={id} // Уникальный ключ для каждого маршрута
-            path={`offer/${card.id}`} // Путь для маршрута
-            element={<WithLayout><Offer reviews={reviewsOfThisCard ? reviewsOfThisCard : []} card={card}
-              others={others}/></WithLayout>} // Передаем оффер в компонент Offer
-          />
-        );
-      })}
+      {/* {placeCards.map((card) => {*/}
+      {/*  const id = card.id;*/}
+      {/*  let reviewsOfThisCard = props.reviews[id];*/}
+      {/*  let others = placeCards.filter((placeCard) => {*/}
+      {/*    return placeCard.id !== id; // используем others после его объявления*/}
+      {/*  });*/}
+      {/*  if (others.length > 3) { // проверяем длину отфильтрованного массива*/}
+      {/*    others = others.slice(0, 3); // если длина больше 3, обрезаем массив до первых трёх элементов*/}
+      {/*  }*/}
+      {/*  return (*/}
+      {/*    <Route*/}
+      {/*      key={id} // Уникальный ключ для каждого маршрута*/}
+      {/*      path={`offer/${card.id}`} // Путь для маршрута*/}
+      {/*      element={<WithLayout><Offer reviews={reviewsOfThisCard ? reviewsOfThisCard : []} card={card}*/}
+      {/*        others={others}/></WithLayout>} // Передаем оффер в компонент Offer*/}
+      {/*    />*/}
+      {/*  );*/}
+      {/* })}*/}
+      <Route path="/offer/:id" exact
+        element={<WithLayout><Offer reviews={[]}
+          others={[]}/></WithLayout>}/>
       <Route path="favorites"
         element={<WithLayout><Favorites
           placeCards={props.placeCards.filter((item) => item.isFavorite)}/></WithLayout>}/>
       <Route path="login" element={<WithLayout><Login/></WithLayout>}/>
-      <Route path="/" element={<WithLayout><Welcome towns={filterCities(towns)} currentTown={currentTown}
-        placeCards={filterCards(placeCards)}/></WithLayout>}/>
+      <Route path="/" element={<WithLayout><Welcome/></WithLayout>}/>
       <Route
         path="*"
         element={
@@ -79,13 +69,8 @@ const mapStateToProps = (state) => ({
 App.propTypes = {
   reviews: PropTypes.objectOf(PropTypes.arrayOf(PropTypes.shape(ReviewCardProps))),
   placeCards: PropTypes.arrayOf(PropTypes.shape(placeCardProps)),
-  currentTown: PropTypes.string.isRequired,
-  towns: PropTypes.arrayOf(PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    id: PropTypes.number.isRequired
-  }))
 };
 
 export {App};
-export default connect(mapStateToProps, null)(App);
+export default connect(mapStateToProps)(App);
 

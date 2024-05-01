@@ -9,8 +9,9 @@ export const ActionsCreator = {
     type: CHANGING_TOWN,
     payload: town
   }),
-  fillOffers: () => ({
-    type: FILLING_OFFERS
+  fillOffers: (offers) => ({
+    type: FILLING_OFFERS,
+    payload: offers
   }),
   sortChange: (sort) => ({
     type: SORT_OFFERS,

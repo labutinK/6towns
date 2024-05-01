@@ -1,4 +1,5 @@
 import React from "react";
+import {useParams} from "react-router-dom";
 import PropTypes from "prop-types";
 import FeatureList from "../featureList/feature-list";
 import Reviews from "../reviews/reviews";
@@ -8,8 +9,13 @@ import Map from "../map/map";
 import OffersList from "../offersList/offersList";
 import {placeCardProps} from "../../proptypes/place-card";
 import {ReviewCardProps} from "../../proptypes/review-card";
+import {connect} from "react-redux";
 
 const Offer = (props) => {
+  const {id} = useParams();
+  const {offers} = props;
+
+
   const {
     features,
     host,
@@ -21,7 +27,7 @@ const Offer = (props) => {
     stars,
     isPremium,
     fav
-  } = props.card;
+  } = offers.find((el) => parseInt(el.id) === parseInt(id));
   const reviews = props.reviews;
   const others = props.others;
 
@@ -111,6 +117,9 @@ const Offer = (props) => {
   </div>;
 };
 
+const mapStateToProps = (state) => ({
+  offers: state.offers,
+});
 
 Offer.propTypes = {
   children: PropTypes.node,
@@ -119,4 +128,4 @@ Offer.propTypes = {
   others: PropTypes.arrayOf(PropTypes.shape(placeCardProps)),
 };
 
-export default Offer;
+export default connect(mapStateToProps)(Offer);

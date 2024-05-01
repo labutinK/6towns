@@ -5,16 +5,17 @@ import leaflet from "leaflet";
 import {placeCardProps} from "../../proptypes/place-card";
 import {connect} from "react-redux";
 import {ActionsCreator} from "../../store/actions";
+import {cityProps} from "../../proptypes/city";
 
 const Map = (props) => {
-  const {placeCards, className, circle, hoverOfferId, resetHoverId} = props;
+  const {placeCards, className, circle, hoverOfferId, resetHoverId, currentTown} = props;
   const mapRef = React.createRef();
   const markersRef = React.useRef([]);
   const mapInstanceRef = React.useRef();
 
   React.useEffect(() => {
-    const city = [52.38333, 4.9];
-    const zoom = 12;
+    const city = [currentTown.location.latitude, currentTown.location.longitude];
+    const zoom = currentTown.location.zoom;
     const icon = leaflet.icon({iconUrl: `img/pin.svg`, iconSize: [30, 30]});
     const map = leaflet.map(mapRef.current, {center: city, zoom, zoomControl: false, marker: true});
     mapInstanceRef.current = map;
@@ -83,11 +84,13 @@ Map.propTypes = {
   className: PropTypes.string,
   circle: PropTypes.arrayOf(PropTypes.string),
   hoverOfferId: PropTypes.number,
-  resetHoverId: PropTypes.func
+  resetHoverId: PropTypes.func,
+  currentTown: PropTypes.shape(cityProps)
 };
 
 const mapStateToProps = (state) => ({
   hoverOfferId: state.hoverOfferId,
+  currentTown: state.currentTown
 });
 
 const mapDispatchToProps = (dispatch) => ({

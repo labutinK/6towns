@@ -2,8 +2,7 @@ import React, {useEffect, useState} from "react";
 import PropTypes from 'prop-types';
 import {placeCardProps} from "../../proptypes/place-card";
 import PlaceCard from "../placeCard/placeCard";
-import {ActionsCreator} from "../../store/actions";
-import {connect} from "react-redux";
+import offersWithStore from "./hocs/offers-with-store";
 
 const OffersList = (props) => {
   const {placeCards, className, hoverOfferId, setNewHoverOffer} = props;
@@ -20,8 +19,8 @@ const OffersList = (props) => {
   }
 
   return <div className={`${className}`}>
-    {placeCards.map((card, i) => {
-      return <PlaceCard card={card} key={card.id + i}
+    {placeCards.map((card) => {
+      return <PlaceCard card={card} key={card.id}
         onMouseover={mouseOnOfferHandler}
         onMouseLeave={mouseOutOfferHandler}
       ></PlaceCard>;
@@ -36,14 +35,6 @@ OffersList.propTypes = {
   setNewHoverOffer: PropTypes.func
 };
 
-const mapStateToProps = (state) => ({
-  hoverOfferId: state.hoverOfferId
-});
+export default offersWithStore(OffersList);
 
-const mapDispatchToProprs = (dispatch) => ({
-  setNewHoverOffer: (id) => {
-    dispatch(ActionsCreator.hoverOfferId(id));
-  }
-});
 
-export default connect(mapStateToProps, mapDispatchToProprs)(OffersList);

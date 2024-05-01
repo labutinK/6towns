@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from "react";
 import PropTypes from "prop-types";
-import {ActionsCreator} from "../../store/actions";
-import {connect} from "react-redux";
+import {cityProps} from "../../proptypes/city";
+import generateUniqueId from "generate-unique-id";
+import citiesWithStore from "./hocs/cities-with-store";
 
 const CitiesList = (props) => {
   const {items, currentTown, setCurrentCity} = props;
@@ -20,12 +21,12 @@ const CitiesList = (props) => {
           <section className="locations container">
             <ul className="locations__list tabs__list">
               {items.map((city) => {
-                return <li key={city.id} className='locations__item'
+                return <li key={generateUniqueId()} className='locations__item'
                   onClick={() => {
-                    setCurrentCity(city.name);
+                    setCurrentCity(city);
                   }}
                 >
-                  <a className={`locations__item-link tabs__item ${city.name === activeLocal && `tabs__item--active`}`}
+                  <a className={`locations__item-link tabs__item ${city === activeLocal && `tabs__item--active`}`}
                     href="#">
                     <span>{city.name}</span>
                   </a>
@@ -39,25 +40,11 @@ const CitiesList = (props) => {
   </>;
 };
 
-const mapStateToProps = (state) => ({
-  currentTown: state.currentTown,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  setCurrentCity(cityName) {
-    dispatch(ActionsCreator.townChange(cityName));
-  },
-});
-
 
 CitiesList.propTypes = {
-  currentTown: PropTypes.string.isRequired,
+  currentTown: PropTypes.shape(cityProps),
   setCurrentCity: PropTypes.func,
-  items: PropTypes.arrayOf(PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    id: PropTypes.number.isRequired
-  }))
+  items: PropTypes.arrayOf(PropTypes.shape(cityProps))
 };
 
-export {CitiesList};
-export default connect(mapStateToProps, mapDispatchToProps)(CitiesList);
+export default citiesWithStore(CitiesList);

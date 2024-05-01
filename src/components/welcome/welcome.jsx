@@ -5,15 +5,24 @@ import OffersList from "../offersList/offersList";
 import Map from "../map/map";
 import CitiesList from "../cities/cities-list";
 import Sort from "../sort/sort";
-import {SORTS} from "../../const/const";
-import {connect} from "react-redux";
-import {ApiActionsCreator} from "../../store/api-actions";
+import {SORTS, POPULAR_SORT} from "../../const/const";
 import LoadingScreen from "../loading-screen/loading-screen";
+import {cityProps} from "../../proptypes/city";
+import withOffers from "./hocs/with-offers";
 
 const Welcome = (props) => {
-  const {placeCards, towns, currentTown, sort, isDataLoaded, onLoadData} = props;
+  const {sort, currentTown, hotels, isDataLoaded, onLoadData, setCurrentTown} = props;
 
-  const [offers, setNewOffers] = React.useState(placeCards);
+  const [offers, setNewOffers] = React.useState([]);
+  const [popularOffers, setNewPopularOffers] = React.useState([]);
+  const [cities, setNewCities] = React.useState([]);
+  const [isLoading, setLoading] = React.useState(true);
+
+  const filterCards = (cards) => {
+    const sortedCards = cards.filter((card) => card.city.name === currentTown.name);
+    setNewOffers(sortedCards);
+    setNewPopularOffers(sortedCards);
+  };
 
   const arraysAreEqual = (arr1, arr2) => {
     for (let i = 0; i < arr1.length; i++) {
@@ -24,33 +33,62 @@ const Welcome = (props) => {
     return true;
   };
 
+  const getTownsFromHotels = (hotels) => {
+    return hotels.reduce((acc, offer) => {
+      const city = offer.city ? offer.city : {};
+      const cityName = city.name ? city.name : ``;
+      if (!acc.some((item) => item.name === cityName)) {
+        acc.push(city);
+      }
+      return acc;
+    }, []);
+  };
+
   useEffect(() => {
     if (!isDataLoaded) {
       onLoadData();
+    } else {
+      const towns = getTownsFromHotels(hotels);
+      setNewCities(towns);
+      setCurrentTown(towns[0]);
     }
   }, [isDataLoaded]);
 
   useEffect(() => {
-    const sortedOffers = SORTS[sort] && SORTS[sort].sortFunc([...placeCards]);
-    if (!arraysAreEqual(offers, sortedOffers)) {
-      setNewOffers(sortedOffers);
+    if (currentTown.name) {
+      filterCards(hotels);
+      setLoading(false);
     }
-  }, [sort, currentTown]);
+
+  }, [currentTown]);
 
 
-  if (!isDataLoaded) {
+  useEffect(() => {
+    if (SORTS.POPULAR_SORT === sort) {
+      setNewOffers(popularOffers);
+    } else {
+      const sortedOffers = SORTS[sort] && SORTS[sort].sortFunc([...offers]);
+      if (!arraysAreEqual(offers, sortedOffers)) {
+        setNewOffers(sortedOffers);
+      }
+    }
+  }, [sort]);
+
+
+  if (!isDataLoaded || isLoading) {
     return <LoadingScreen></LoadingScreen>;
   }
+
 
   return <div className="page page--gray page--main">
     {props.children}
     <main className="page__main page__main--index">
-      <CitiesList items={towns}></CitiesList>
+      <CitiesList items={cities}></CitiesList>
       <div className="cities">
         <div className="cities__places-container container">
           <section className="cities__places places">
             <h2 className="visually-hidden">Places</h2>
-            <b className="places__found">{offers.length} places to stay in {currentTown}</b>
+            <b className="places__found">{offers.length} places to stay in {currentTown.name}</b>
             <Sort items={SORTS}></Sort>
             {<OffersList placeCards={offers}
               className={`cities__places-list places__list tabs__content`}></OffersList>}
@@ -64,29 +102,14 @@ const Welcome = (props) => {
   </div>;
 };
 
-const mapStateToProps = (state) => ({
-  sort: state.sort,
-  currentHoverOfferId: state.hoverOfferId,
-  isDataLoaded: state.isDataLoaded,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  async onLoadData() {
-    dispatch(ApiActionsCreator.getOffers());
-  },
-});
-
 
 Welcome.propTypes = {
   placeCards: PropTypes.arrayOf(PropTypes.shape(placeCardProps)),
   children: PropTypes.node,
-  currentTown: PropTypes.string.isRequired,
-  towns: PropTypes.arrayOf(PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    id: PropTypes.number.isRequired
-  })),
+  currentTown: PropTypes.shape(cityProps),
+  towns: PropTypes.arrayOf(PropTypes.shape(cityProps)),
   sort: PropTypes.string
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Welcome);
+export default withOffers(Welcome);
 

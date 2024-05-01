@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import {hostProps} from "../../proptypes/host";
 
 const Host = (props) => {
-  const {name, avatar, description, status} = props.host;
+  const {name, avatar, status, description} = props.host;
 
   return (
     <div className="property__host">
@@ -19,7 +19,7 @@ const Host = (props) => {
         {
           status && (
             <span className="property__user-status">
-              {status}
+              Pro
             </span>
           )
         }
@@ -28,13 +28,9 @@ const Host = (props) => {
         description.length > 0 && (
           <div className="property__description">
             {
-              description.map((descP, key) => {
-                return (
-                  <p key={key} className="property__text">
-                    {descP}
-                  </p>
-                );
-              })
+              <p className="property__text">
+                {description}
+              </p>
             }
           </div>
         )

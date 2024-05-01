@@ -1,7 +1,6 @@
 import React, {useEffect} from "react";
 import PropTypes from 'prop-types';
-import {connect} from "react-redux";
-import {ActionsCreator} from "../../store/actions";
+import sortWithStore from "./hocs/sort-with-store";
 
 const Sort = (props) => {
   const {items, setSorter, sort} = props;
@@ -65,15 +64,6 @@ const Sort = (props) => {
   );
 };
 
-const mapStateToProps = (state) => ({
-  sort: state.sort
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  setSorter: (sort) => {
-    dispatch(ActionsCreator.sortChange(sort));
-  }
-});
 
 Sort.propTypes = {
   items: PropTypes.object,
@@ -81,5 +71,5 @@ Sort.propTypes = {
   sort: PropTypes.string
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Sort);
+export default sortWithStore(Sort);
 

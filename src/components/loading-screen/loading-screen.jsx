@@ -2,7 +2,9 @@ import React from 'react';
 
 const LoadingScreen = () => {
   return (
-    <p>Loading ...</p>
+    <div className="spinner-wrapper">
+      <div className="spinner spinnerPNG"></div>
+    </div>
   );
 };
 
