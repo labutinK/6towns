@@ -40,5 +40,13 @@ export const SORTS = {
     }
 };
 
+export const AUTH_STATUS = {
+  NO_AUTH: `NO_AUTH`,
+  AUTH: `AUTH`
+};
+
+
 export const API_ROUTES = {
+  HOTELS: `/hotels`,
+  LOGIN: `/login`
 };

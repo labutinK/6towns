@@ -1,4 +1,5 @@
 import {ActionsCreator} from "./actions";
+import {API_ROUTES, AUTH_STATUS} from "../const/const";
 
 const adaptPointToClient = (pointServer) => {
   let pointClient = Object.assign(
@@ -60,12 +61,16 @@ const adaptPointToClient = (pointServer) => {
   return pointClient;
 };
 
-export const GET_OFFERS = `GET_OFFERS`;
+export const GET_OFFERS = `getOffers`;
+export const LOGIN_CHECK = `loginCheck`;
 
 export const ApiActionsCreator = {
   getOffers: () => async (dispatch, _getState, api) => {
-    const {data} = await api.get(`/hotels`);
+    const {data} = await api.get(API_ROUTES.HOTELS);
     dispatch(ActionsCreator.fillOffers(data.map((item) => adaptPointToClient(item))));
     dispatch(ActionsCreator.dataIsLoaded());
-  }
+  },
+  loginCheck: () => (dispatch, _getState, api) => {
+    api.get(API_ROUTES.LOGIN).then(() => dispatch(ActionsCreator.authStatusChange(AUTH_STATUS.AUTH))).catch(() => {});
+  },
 };

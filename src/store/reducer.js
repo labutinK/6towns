@@ -1,4 +1,4 @@
-import {CHANGING_TOWN, FILLING_OFFERS, SORT_OFFERS, HOVER_OFFER_CHANGE, DATA_LOADED_STATUS} from "./actions";
+import {CHANGING_TOWN, FILLING_OFFERS, SORT_OFFERS, HOVER_OFFER_CHANGE, DATA_LOADED_STATUS, AUTH_STATUS_CHANGE} from "./actions";
 
 function reducer(state, action) {
   switch (action.type) {
@@ -26,6 +26,11 @@ function reducer(state, action) {
       return {
         ...state,
         isDataLoaded: action.payload,
+      };
+    case AUTH_STATUS_CHANGE:
+      return {
+        ...state,
+        authorizationStatus: action.payload,
       };
     default:
       return state;

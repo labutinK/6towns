@@ -1,4 +1,4 @@
-import {POPULAR_SORT} from "../const/const";
+import {POPULAR_SORT, AUTH_STATUS} from "../const/const";
 
 export const initialState = {
   currentTown: {
@@ -9,6 +9,7 @@ export const initialState = {
       zoom: ``
     }
   },
+  authorizationStatus: AUTH_STATUS.NO_AUTH,
   sort: POPULAR_SORT,
   hoverOfferId: 0,
   isDataLoaded: false,

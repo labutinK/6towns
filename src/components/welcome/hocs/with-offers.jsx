@@ -1,5 +1,5 @@
 import {connect} from "react-redux";
-import {ApiActionsCreator} from "../../../store/api-actions";
+import {ApiActionsCreator, GET_OFFERS, LOGIN_CHECK} from "../../../store/api-actions";
 import {ActionsCreator} from "../../../store/actions";
 
 
@@ -13,7 +13,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   onLoadData() {
-    dispatch(ApiActionsCreator.getOffers());
+    dispatch(ApiActionsCreator[GET_OFFERS]());
+    dispatch(ApiActionsCreator[LOGIN_CHECK]());
   },
   async setCurrentTown(town) {
     await dispatch(ActionsCreator.townChange(town));

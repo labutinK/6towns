@@ -1,8 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
 import {Link} from "react-router-dom";
+import withStore from "../../layout/hocs/with-store";
+import {AUTH_STATUS} from "../../const/const";
 
 const Layout = (props) => {
+  const {isAuth} = props;
+
   return <div className="page page--gray page--main">
     <header className="header">
       <div className="container">
@@ -19,7 +23,7 @@ const Layout = (props) => {
                   <div className="header__avatar-wrapper user__avatar-wrapper">
                   </div>
                   {
-                    Math.random() < 0.5 ? (<span className="header__login">Sign in</span>) : (
+                    isAuth === AUTH_STATUS.NO_AUTH ? (<span className="header__login">Sign in</span>) : (
                       <span className="header__user-name user__name">Oliver.conner@gmail.com</span>)
                   }
                 </a>
@@ -37,6 +41,7 @@ const Layout = (props) => {
 
 Layout.propTypes = {
   children: PropTypes.node,
+  isAuth: PropTypes.string
 };
 
-export default Layout;
+export default withStore(Layout);
