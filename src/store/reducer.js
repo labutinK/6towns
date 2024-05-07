@@ -1,4 +1,15 @@
-import {CHANGING_TOWN, FILLING_OFFERS, SORT_OFFERS, HOVER_OFFER_CHANGE, DATA_LOADED_STATUS, AUTH_STATUS_CHANGE} from "./actions";
+import {
+  CHANGING_TOWN,
+  FILLING_OFFERS,
+  FILL_DETAIL_OFFER,
+  SORT_OFFERS,
+  HOVER_OFFER_CHANGE,
+  DATA_LOADED_STATUS,
+  AUTH_STATUS_CHANGE,
+  LOGIN, NOT_FOUND,
+  FILL_DETAIL_REVIEWS,
+  FILL_DETAIL_NEARBY
+} from "./actions";
 
 function reducer(state, action) {
   switch (action.type) {
@@ -11,6 +22,21 @@ function reducer(state, action) {
       return {
         ...state,
         offers: action.payload
+      };
+    case FILL_DETAIL_OFFER:
+      return {
+        ...state,
+        detailOffer: action.payload
+      };
+    case FILL_DETAIL_REVIEWS:
+      return {
+        ...state,
+        detailReviews: action.payload
+      };
+    case FILL_DETAIL_NEARBY:
+      return {
+        ...state,
+        detailNearby: action.payload
       };
     case SORT_OFFERS:
       return {
@@ -31,6 +57,16 @@ function reducer(state, action) {
       return {
         ...state,
         authorizationStatus: action.payload,
+      };
+    case LOGIN:
+      return {
+        ...state,
+        userData: action.payload
+      };
+    case NOT_FOUND:
+      return {
+        ...state,
+        notFound: action.payload
       };
     default:
       return state;

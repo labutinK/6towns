@@ -48,5 +48,6 @@ export const AUTH_STATUS = {
 
 export const API_ROUTES = {
   HOTELS: `/hotels`,
-  LOGIN: `/login`
+  LOGIN: `/login`,
+  COMMENTS: `/comments`
 };

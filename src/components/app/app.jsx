@@ -10,11 +10,11 @@ import {Link} from "react-router-dom";
 import {ReviewCardProps} from "../../proptypes/review-card";
 import {placeCardProps} from "../../proptypes/place-card";
 import {connect} from "react-redux";
-import {ApiActionsCreator} from "../../store/api-actions";
-import {ActionsCreator} from "../../store/actions";
+import PrivateRoute from "../private-route/privateRoute";
+import {AUTH_STATUS} from "../../const/const";
 
 const App = (props) => {
-  const {placeCards} = props;
+  const {placeCards, authorizationStatus} = props;
   return <BrowserRouter>
     <Routes>
       {/* {placeCards.map((card) => {*/}
@@ -36,11 +36,15 @@ const App = (props) => {
       {/*  );*/}
       {/* })}*/}
       <Route path="/offer/:id" exact
-        element={<WithLayout><Offer reviews={[]}
-          others={[]}/></WithLayout>}/>
-      <Route path="favorites"
-        element={<WithLayout><Favorites
-          placeCards={props.placeCards.filter((item) => item.isFavorite)}/></WithLayout>}/>
+        element={<WithLayout><Offer/></WithLayout>}/>
+      <Route path="/favorites"
+        element={<PrivateRoute
+          auth={authorizationStatus === AUTH_STATUS.AUTH}
+          redirectPath='/login/'
+        >
+          <WithLayout><Favorites placeCards={placeCards.filter((item) => item.isFavorite)}/></WithLayout>
+        </PrivateRoute>}
+      />
       <Route path="login" element={<WithLayout><Login/></WithLayout>}/>
       <Route path="/" element={<WithLayout><Welcome/></WithLayout>}/>
       <Route
@@ -64,11 +68,13 @@ const App = (props) => {
 const mapStateToProps = (state) => ({
   placeCards: state.offers,
   currentTown: state.currentTown,
+  authorizationStatus: state.authorizationStatus
 });
 
 App.propTypes = {
   reviews: PropTypes.objectOf(PropTypes.arrayOf(PropTypes.shape(ReviewCardProps))),
   placeCards: PropTypes.arrayOf(PropTypes.shape(placeCardProps)),
+  authorizationStatus: PropTypes.string.isRequired,
 };
 
 export {App};

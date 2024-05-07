@@ -9,9 +9,14 @@ export const initialState = {
       zoom: ``
     }
   },
+  userData: {},
+  detailOffer: {},
   authorizationStatus: AUTH_STATUS.NO_AUTH,
   sort: POPULAR_SORT,
   hoverOfferId: 0,
   isDataLoaded: false,
+  notFound: false,
+  detailReviews: [],
+  detailNearby: [],
   offers: []
 };

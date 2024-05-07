@@ -1,20 +1,19 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import PropTypes from "prop-types";
-import FeatureList from "../featureList/feature-list";
-import Reviews from "../reviews/reviews";
+import FeatureList from "./featureList/feature-list";
+import Reviews from "./reviews/reviews";
 import {getWidthFromStars} from "../../utils/utils";
-import Host from "../host/host";
+import Host from "./host/host";
 import Map from "../map/map";
 import OffersList from "../offersList/offersList";
 import {placeCardProps} from "../../proptypes/place-card";
 import {ReviewCardProps} from "../../proptypes/review-card";
-import {connect} from "react-redux";
+import withOfferData from "./hocs/offer-with-data";
+import LoadingScreen from "../loading-screen/loading-screen";
 
 const Offer = (props) => {
-  const {id} = useParams();
-  const {offers} = props;
-
+  const {card} = props;
 
   const {
     features,
@@ -22,14 +21,16 @@ const Offer = (props) => {
     goods,
     name,
     images,
-    coords,
+    location,
     price,
     stars,
     isPremium,
     fav
-  } = offers.find((el) => parseInt(el.id) === parseInt(id));
+  } = card;
+
   const reviews = props.reviews;
   const others = props.others;
+
 
   const getButton = (isFav) => {
     if (isFav) {
@@ -105,7 +106,7 @@ const Offer = (props) => {
             {<Reviews reviews={reviews}></Reviews>}
           </div>
         </div>
-        {<Map placeCards={others} className={`property__map`} circle={coords}></Map>}
+        {<Map placeCards={others} className={`property__map`} circle={location}></Map>}
       </section>
       <div className="container">
         <section className="near-places places">
@@ -117,15 +118,12 @@ const Offer = (props) => {
   </div>;
 };
 
-const mapStateToProps = (state) => ({
-  offers: state.offers,
-});
 
 Offer.propTypes = {
   children: PropTypes.node,
-  card: PropTypes.shape(placeCardProps),
   reviews: PropTypes.arrayOf(PropTypes.shape(ReviewCardProps)),
   others: PropTypes.arrayOf(PropTypes.shape(placeCardProps)),
+  card: PropTypes.shape(placeCardProps),
 };
 
-export default connect(mapStateToProps)(Offer);
+export default withOfferData(Offer);

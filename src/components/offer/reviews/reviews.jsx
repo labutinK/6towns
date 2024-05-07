@@ -1,8 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
-import ReviewForm from "../reviewForm/review-form";
+import ReviewForm from "../../reviewForm/review-form";
 import ReviewsList from "../reviewsList/reviews-list";
-import {ReviewCardProps} from "../../proptypes/review-card";
+import {ReviewCardProps} from "../../../proptypes/review-card";
 
 const Reviews = (props) => {
   const {reviews} = props;

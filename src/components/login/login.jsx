@@ -1,14 +1,33 @@
-import React from "react";
+import React, {useRef} from "react";
 import PropTypes from "prop-types";
+import withStore from "./hocs/with-store";
+import {useNavigate} from "react-router-dom";
 
 const Login = (props) => {
+  const {login} = props;
+  const formRef = useRef();
+  const navigate = useNavigate();
+
+  const submitHandler = (evt) => {
+    evt.preventDefault();
+    const fd = new FormData(formRef.current);
+    login({
+      'email': fd.get(`email`),
+      'password': fd.get(`password`)
+    }, navigate);
+    return false;
+  };
+
   return <div className="page page--gray page--login">
     {props.children}
     <main className="page__main page__main--login">
       <div className="page__login-container container">
         <section className="login">
           <h1 className="login__title">Sign in</h1>
-          <form className="login__form form" action="#" method="post">
+          <form
+            ref={formRef}
+            onSubmit={submitHandler}
+            className="login__form form" action="#" method="post">
             <div className="login__input-wrapper form__input-wrapper">
               <label className="visually-hidden">E-mail</label>
               <input className="login__input form__input" type="email" name="email" placeholder="Email" required=""/>
@@ -34,7 +53,8 @@ const Login = (props) => {
 };
 
 Login.propTypes = {
-  children: PropTypes.node
+  children: PropTypes.node,
+  login: PropTypes.func
 };
 
-export default Login;
+export default withStore(Login);

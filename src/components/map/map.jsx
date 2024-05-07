@@ -14,8 +14,8 @@ const Map = (props) => {
   const mapInstanceRef = React.useRef();
 
   React.useEffect(() => {
-    const city = [currentTown.location.latitude, currentTown.location.longitude];
-    const zoom = currentTown.location.zoom;
+    const city = circle ? [circle.latitude, circle.longitude] : [currentTown.location.latitude, currentTown.location.longitude];
+    const zoom = circle ? circle.zoom : currentTown.location.zoom;
     const icon = leaflet.icon({iconUrl: `img/pin.svg`, iconSize: [30, 30]});
     const map = leaflet.map(mapRef.current, {center: city, zoom, zoomControl: false, marker: true});
     mapInstanceRef.current = map;
@@ -23,7 +23,7 @@ const Map = (props) => {
     leaflet.tileLayer(`https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png`,
         {attribution: `© OpenStreetMap contributors © CARTO`}).addTo(map);
     if (circle) {
-      leaflet.circle(circle, {
+      leaflet.circle([circle.latitude, circle.longitude], {
         color: `#6ea3d5`,
         fillColor: `#6ea3d5`,
         fillOpacity: 0.5,
@@ -82,7 +82,7 @@ const Map = (props) => {
 Map.propTypes = {
   placeCards: PropTypes.arrayOf(PropTypes.shape(placeCardProps)),
   className: PropTypes.string,
-  circle: PropTypes.arrayOf(PropTypes.string),
+  circle: PropTypes.object,
   hoverOfferId: PropTypes.number,
   resetHoverId: PropTypes.func,
   currentTown: PropTypes.shape(cityProps)

@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {hostProps} from "../../proptypes/host";
+import {hostProps} from "../../../proptypes/host";
 
 const Host = (props) => {
   const {name, avatar, status, description} = props.host;

@@ -61,16 +61,60 @@ const adaptPointToClient = (pointServer) => {
   return pointClient;
 };
 
-export const GET_OFFERS = `getOffers`;
-export const LOGIN_CHECK = `loginCheck`;
+const adaptReviewToClient = (reviewServer) => {
+  let reviewClient = Object.assign(
+      {},
+      reviewServer,
+      {
+        text: reviewServer.comment,
+        stars: reviewServer.rating,
+      }
+  );
+
+  if (reviewServer.user) {
+    if (reviewServer.user.avatar_url) {
+      reviewClient.avatar = reviewServer.user.avatar_url;
+    }
+    if (reviewServer.user.name) {
+      reviewClient.name = reviewServer.user.name;
+    }
+  }
+
+  delete reviewClient.comment;
+  delete reviewClient.rating;
+  delete reviewClient.user;
+
+  return reviewClient;
+};
 
 export const ApiActionsCreator = {
   getOffers: () => async (dispatch, _getState, api) => {
     const {data} = await api.get(API_ROUTES.HOTELS);
     dispatch(ActionsCreator.fillOffers(data.map((item) => adaptPointToClient(item))));
-    dispatch(ActionsCreator.dataIsLoaded());
+    dispatch(ActionsCreator.dataIsLoaded(true));
+  },
+  getDetailOffer: (id) => async (dispatch, _getState, api) => {
+    try {
+      const hotels = await api.get(API_ROUTES.HOTELS + `/` + id);
+      const comments = await api.get(API_ROUTES.COMMENTS + `/` + id);
+      const nearby = await api.get(API_ROUTES.HOTELS + `/` + id + `/nearby`);
+      dispatch(ActionsCreator.fillDetailReviews(comments.data.map((review) => adaptReviewToClient(review))));
+      dispatch(ActionsCreator.fillNearbyOffers(nearby.data.map((item) => adaptPointToClient(item))));
+      dispatch(ActionsCreator.fillDetailOffer(adaptPointToClient(hotels.data)));
+    } catch (error) {
+      dispatch(ActionsCreator.notFound(true));
+    }
   },
   loginCheck: () => (dispatch, _getState, api) => {
-    api.get(API_ROUTES.LOGIN).then(() => dispatch(ActionsCreator.authStatusChange(AUTH_STATUS.AUTH))).catch(() => {});
+    api.get(API_ROUTES.LOGIN).then(() => dispatch(ActionsCreator.authStatusChange(AUTH_STATUS.AUTH))).catch(() => {
+    });
   },
+  login: (fd, navigate) => (dispatch, _getState, api) => {
+    api.post(API_ROUTES.LOGIN, fd).then(({data}) => {
+      dispatch(ActionsCreator.login(data));
+      dispatch(ActionsCreator.authStatusChange(AUTH_STATUS.AUTH));
+      navigate(`/`);
+    }).catch(() => {
+    });
+  }
 };

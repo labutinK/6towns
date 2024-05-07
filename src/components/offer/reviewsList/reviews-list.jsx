@@ -1,10 +1,23 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {ReviewCardProps} from "../../proptypes/review-card";
-import {getWidthFromStars} from "../../utils/utils";
+import {ReviewCardProps} from "../../../proptypes/review-card";
+import {getWidthFromStars} from "../../../utils/utils";
 
 const ReviewsList = (props) => {
   const {reviews} = props;
+
+  const formatData = (dateString) => {
+    const date = new Date(dateString);
+
+    const options = {
+      year: `numeric`,
+      month: `long`,
+      day: `numeric`,
+    };
+
+    return date.toLocaleString(`en-US`, options);
+  };
+
   return (reviews.length > 0 && (
     <ul className="reviews__list">
       {reviews.map((review, key) => (
@@ -29,7 +42,7 @@ const ReviewsList = (props) => {
               {review.text}
             </p>
             <time className="reviews__time" dateTime="2019-04-24">
-              {review.date}
+              {formatData(review.date)}
             </time>
           </div>
         </li>
