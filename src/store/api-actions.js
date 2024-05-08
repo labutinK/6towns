@@ -98,8 +98,8 @@ export const ApiActionsCreator = {
       const hotels = await api.get(API_ROUTES.HOTELS + `/` + id);
       const comments = await api.get(API_ROUTES.COMMENTS + `/` + id);
       const nearby = await api.get(API_ROUTES.HOTELS + `/` + id + `/nearby`);
-      dispatch(ActionsCreator.fillDetailReviews(comments.data.map((review) => adaptReviewToClient(review))));
-      dispatch(ActionsCreator.fillNearbyOffers(nearby.data.map((item) => adaptPointToClient(item))));
+      dispatch(ActionsCreator.fillDetailReviews(comments.data.slice(0, 3).map((review) => adaptReviewToClient(review))));
+      dispatch(ActionsCreator.fillNearbyOffers(nearby.data.slice(0, 3).map((item) => adaptPointToClient(item))));
       dispatch(ActionsCreator.fillDetailOffer(adaptPointToClient(hotels.data)));
     } catch (error) {
       dispatch(ActionsCreator.notFound(true));
@@ -116,5 +116,10 @@ export const ApiActionsCreator = {
       navigate(`/`);
     }).catch(() => {
     });
+  },
+  resetAllDetailData: () => (dispatch, _getState) => {
+    dispatch(ActionsCreator.fillDetailReviews([]));
+    dispatch(ActionsCreator.fillNearbyOffers([]));
+    dispatch(ActionsCreator.fillDetailOffer({}));
   }
 };

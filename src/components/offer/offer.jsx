@@ -30,6 +30,14 @@ const Offer = (props) => {
 
   const reviews = props.reviews;
   const others = props.others;
+  const othersForMap = ([...others]);
+  othersForMap.push(Object.assign(
+      {},
+      card,
+      {
+        isMain: true
+      }
+  ));
 
 
   const getButton = (isFav) => {
@@ -49,6 +57,7 @@ const Offer = (props) => {
       </button>;
     }
   };
+
 
   return <div className="page">
     {props.children}
@@ -106,7 +115,7 @@ const Offer = (props) => {
             {<Reviews reviews={reviews}></Reviews>}
           </div>
         </div>
-        {<Map placeCards={others} className={`property__map`} circle={location}></Map>}
+        {<Map placeCards={othersForMap} className={`property__map`} circle={location}></Map>}
       </section>
       <div className="container">
         <section className="near-places places">

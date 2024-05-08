@@ -9,7 +9,7 @@ import {ActionsCreator} from "../../../store/actions";
 const offerWithData = (WrappedComponent) => {
   const OfferWithData = (props) => {
     const {id} = useParams();
-    const {onLoadOffer, detailOffer, notFound, resetNotFound, detailReviews, detailNearby} = props;
+    const {onLoadOffer, detailOffer, notFound, resetNotFound, detailReviews, detailNearby, resetAllData} = props;
     const [offerLoaded, setLoadedStatus] = useState(false);
     const location = useLocation();
 
@@ -17,7 +17,7 @@ const offerWithData = (WrappedComponent) => {
       if (!offerLoaded) {
         onLoadOffer(id);
       }
-    }, []);
+    }, [offerLoaded]);
 
     useEffect(() => {
       if (Object.keys(detailOffer).length !== 0) {
@@ -26,9 +26,13 @@ const offerWithData = (WrappedComponent) => {
     }, [detailOffer]);
 
     useEffect(() => {
-      if (notFound) {
-        resetNotFound();
-      }
+      return () => {
+        resetAllData();
+        setLoadedStatus(false);
+        if (notFound) {
+          resetNotFound();
+        }
+      };
     }, [location]);
 
 
@@ -52,6 +56,7 @@ const offerWithData = (WrappedComponent) => {
     detailOffer: PropTypes.object,
     notFound: PropTypes.bool,
     resetNotFound: PropTypes.func,
+    resetAllData: PropTypes.func,
     detailReviews: PropTypes.array,
     detailNearby: PropTypes.array
   };
@@ -69,9 +74,11 @@ const offerWithData = (WrappedComponent) => {
     },
     resetNotFound: () => {
       dispatch(ActionsCreator.notFound(false));
+    },
+    resetAllData: () => {
+      dispatch(ApiActionsCreator.resetAllDetailData());
     }
   });
-
 
   return connect(mapStoreToProps, mapDispatchToProps)(OfferWithData);
 };

@@ -714,7 +714,8 @@ img {
 .locations__item {
   display: block;
   margin-right: 36px;
-  margin-bottom: 19px
+  margin-bottom: 19px;
+  cursor: pointer;
 }
 
 .favorites__locations .locations__item-link {
@@ -1930,7 +1931,7 @@ img {
   opacity: .5
 }
 
-.spinner-wrapper{
+.spinner-wrapper {
   height: 100vh;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -1942,19 +1943,24 @@ img {
   -ms-flex-align: center;
   align-items: center;
 }
+
 .spinner {
   display: inline-block;
   width: 50px;
   height: 50px;
-  background-color: rgba(0,0,0,0);
+  background-color: rgba(0, 0, 0, 0);
   background-size: 50px 50px;
   background-position: center center;
   background-repeat: no-repeat;
 }
 
 @keyframes loadspinner {
-  0% {transform: rotate(0deg);}
-  100% {transform: rotate(360deg);}
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .spinnerPNG {

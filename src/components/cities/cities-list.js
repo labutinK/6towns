@@ -26,10 +26,9 @@ const CitiesList = (props) => {
                     setCurrentCity(city);
                   }}
                 >
-                  <a className={`locations__item-link tabs__item ${city === activeLocal && `tabs__item--active`}`}
-                    href="#">
+                  <span className={`locations__item-link tabs__item ${city === activeLocal && `tabs__item--active`}`}>
                     <span>{city.name}</span>
-                  </a>
+                  </span>
                 </li>;
               })}
             </ul>
