@@ -4,7 +4,9 @@ import React, {useEffect, useState} from "react";
 import {Link, useParams, useLocation} from "react-router-dom";
 import LoadingScreen from "../../loading-screen/loading-screen";
 import PropTypes from "prop-types";
-import {ActionsCreator} from "../../../store/actions";
+import {getDetailNearby, getDetailOffer, getDetailReviews} from "../../../store/offers-data/selectors";
+import {getNotFound} from "../../../store/process/selectors";
+import {notFound as nnFound} from "../../../store/actions";
 
 const offerWithData = (WrappedComponent) => {
   const OfferWithData = (props) => {
@@ -61,11 +63,11 @@ const offerWithData = (WrappedComponent) => {
     detailNearby: PropTypes.array
   };
 
-  const mapStoreToProps = (store) => ({
-    detailOffer: store.detailOffer,
-    notFound: store.notFound,
-    detailReviews: store.detailReviews,
-    detailNearby: store.detailNearby
+  const mapStoreToProps = (state) => ({
+    detailOffer: getDetailOffer(state),
+    notFound: getNotFound(state),
+    detailReviews: getDetailReviews(state),
+    detailNearby: getDetailNearby(state)
   });
 
   const mapDispatchToProps = (dispatch) => ({
@@ -73,7 +75,7 @@ const offerWithData = (WrappedComponent) => {
       dispatch(ApiActionsCreator.getDetailOffer(id));
     },
     resetNotFound: () => {
-      dispatch(ActionsCreator.notFound(false));
+      dispatch(nnFound(false));
     },
     resetAllData: () => {
       dispatch(ApiActionsCreator.resetAllDetailData());

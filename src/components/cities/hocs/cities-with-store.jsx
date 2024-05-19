@@ -1,13 +1,14 @@
 import {connect} from "react-redux";
-import {ActionsCreator} from "../../../store/actions";
+import {townChange} from "../../../store/actions";
+import {getCurrentTown} from "../../../store/process/selectors";
 
 const mapStateToProps = (state) => ({
-  currentTown: state.currentTown,
+  currentTown: getCurrentTown(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
   setCurrentCity(cityName) {
-    dispatch(ActionsCreator.townChange(cityName));
+    dispatch(townChange(cityName));
   },
 });
 

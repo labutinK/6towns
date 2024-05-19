@@ -1,5 +1,4 @@
 import {connect} from "react-redux";
-import {ActionsCreator, LOGIN} from "../../../store/actions";
 import {ApiActionsCreator} from "../../../store/api-actions";
 
 const mapStateToProps = (state) => {

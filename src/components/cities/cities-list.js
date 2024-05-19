@@ -3,15 +3,10 @@ import PropTypes from "prop-types";
 import {cityProps} from "../../proptypes/city";
 import generateUniqueId from "generate-unique-id";
 import citiesWithStore from "./hocs/cities-with-store";
+import {memo} from "react";
 
 const CitiesList = (props) => {
   const {items, currentTown, setCurrentCity} = props;
-
-  const [activeLocal, setActiveLocal] = useState(currentTown);
-
-  useEffect(() => {
-    setActiveLocal(currentTown);
-  }, [currentTown]);
 
   return <>
     <h1 className="visually-hidden">Cities</h1>
@@ -26,7 +21,7 @@ const CitiesList = (props) => {
                     setCurrentCity(city);
                   }}
                 >
-                  <span className={`locations__item-link tabs__item ${city === activeLocal && `tabs__item--active`}`}>
+                  <span className={`locations__item-link tabs__item ${city === currentTown && `tabs__item--active`}`}>
                     <span>{city.name}</span>
                   </span>
                 </li>;
@@ -46,4 +41,6 @@ CitiesList.propTypes = {
   items: PropTypes.arrayOf(PropTypes.shape(cityProps))
 };
 
-export default citiesWithStore(CitiesList);
+export default citiesWithStore(memo(CitiesList, (prevProps, nextProps) => {
+  return prevProps.currentTown.name === nextProps.currentTown.name;
+}));

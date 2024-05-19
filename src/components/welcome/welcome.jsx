@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import PropTypes from 'prop-types';
 import {placeCardProps} from "../../proptypes/place-card";
 import OffersList from "../offersList/offersList";
@@ -10,21 +10,22 @@ import LoadingScreen from "../loading-screen/loading-screen";
 import {cityProps} from "../../proptypes/city";
 import withOffers from "./hocs/with-offers";
 import {useLocation} from "react-router-dom";
+import {memo} from "react";
 
 const Welcome = (props) => {
   const {sort, currentTown, hotels, isDataLoaded, onLoadData, setCurrentTown, resetDataLoadedFlag} = props;
 
-  const [offers, setNewOffers] = React.useState([]);
-  const [popularOffers, setNewPopularOffers] = React.useState([]);
-  const [cities, setNewCities] = React.useState([]);
-  const [isLoading, setLoading] = React.useState(true);
+  const [offers, setNewOffers] = useState([]);
+  const [popularOffers, setNewPopularOffers] = useState([]);
+  const [cities, setNewCities] = useState([]);
+  const [isLoading, setLoading] = useState(true);
   const location = useLocation();
 
   const filterCards = (cards) => {
-    const sortedCards = cards.filter((card) => card.city.name === currentTown.name);
-    setNewOffers(sortedCards);
-    setNewPopularOffers(sortedCards);
+    return cards.filter((card) => card.city.name === currentTown.name);
   };
+
+  const filteredCards = useMemo(() => filterCards(hotels), [currentTown]);
 
   const arraysAreEqual = (arr1, arr2) => {
     for (let i = 0; i < arr1.length; i++) {
@@ -37,9 +38,8 @@ const Welcome = (props) => {
 
   const getTownsFromHotels = (hotelsList) => {
     return hotelsList.reduce((acc, offer) => {
-      const city = offer.city ? offer.city : {};
-      const cityName = city.name ? city.name : ``;
-      if (!acc.some((item) => item.name === cityName)) {
+      const city = offer.city || {};
+      if (city.name && !acc.some((item) => item.name === city.name)) {
         acc.push(city);
       }
       return acc;
@@ -48,20 +48,23 @@ const Welcome = (props) => {
 
   useEffect(() => {
     if (!isDataLoaded) {
-      onLoadData();
+      onLoadData().then(() => {
+        setLoading(false);
+      });
     } else {
       const towns = getTownsFromHotels(hotels);
       setNewCities(towns);
       setCurrentTown(towns[0]);
     }
+
   }, [isDataLoaded]);
 
-  useEffect(() => {
-    if (currentTown.name) {
-      filterCards(hotels);
-      setLoading(false);
-    }
 
+  useEffect(() => {
+    if (currentTown && currentTown.name) {
+      setNewOffers(filteredCards);
+      setNewPopularOffers(filteredCards);
+    }
   }, [currentTown]);
 
 
@@ -80,11 +83,9 @@ const Welcome = (props) => {
     resetDataLoadedFlag();
   }, [location]);
 
-
   if (!isDataLoaded || isLoading) {
     return <LoadingScreen></LoadingScreen>;
   }
-
 
   return <div className="page page--gray page--main">
     {props.children}
@@ -122,5 +123,10 @@ Welcome.propTypes = {
   resetDataLoadedFlag: PropTypes.func
 };
 
-export default withOffers(Welcome);
+export default withOffers(memo(Welcome, (prevProps, nextProps) => {
+  return (prevProps.sort === nextProps.sort && prevProps.currentTown === nextProps.currentTown
+    && prevProps.offers === nextProps.offers
+    && prevProps.isDataLoaded === nextProps.isDataLoaded);
+}));
+
 

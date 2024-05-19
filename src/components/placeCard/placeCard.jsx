@@ -9,7 +9,6 @@ const PlaceCard = (props) => {
   const onMouseOver = props.onMouseover;
   const onMouseLeve = props.onMouseLeave;
 
-
   return <article className="cities__place-card place-card" onMouseLeave={onMouseLeve} onMouseOver={() => {
     onMouseOver(id);
   }}>

@@ -1,10 +1,10 @@
-import React, {useEffect} from "react";
-import PropTypes from "prop-types";
+import React, {useEffect, memo} from "react";
+import PropTypes, {bool} from "prop-types";
 import "leaflet/dist/leaflet.css";
 import leaflet from "leaflet";
 import {placeCardProps} from "../../proptypes/place-card";
 import {connect} from "react-redux";
-import {ActionsCreator} from "../../store/actions";
+import {hoverOfferId as hoverOfferIdFunc} from "../../store/actions";
 import {cityProps} from "../../proptypes/city";
 
 const Map = (props) => {
@@ -12,6 +12,7 @@ const Map = (props) => {
   const mapRef = React.createRef();
   const markersRef = React.useRef([]);
   const mapInstanceRef = React.useRef();
+
 
   React.useEffect(() => {
     const city = circle ? [circle.latitude, circle.longitude] : [currentTown.location.latitude, currentTown.location.longitude];
@@ -93,17 +94,20 @@ Map.propTypes = {
   currentTown: PropTypes.shape(cityProps)
 };
 
-const mapStateToProps = (state) => ({
-  hoverOfferId: state.hoverOfferId,
-  currentTown: state.currentTown
+const mapStateToProps = ({process}) => ({
+  hoverOfferId: process.hoverOfferId,
+  currentTown: process.currentTown
 });
 
 const mapDispatchToProps = (dispatch) => ({
   resetHoverId: () => {
-    dispatch(ActionsCreator.hoverOfferId(0));
+    dispatch(hoverOfferIdFunc(0));
   }
 });
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(Map);
+export default connect(mapStateToProps, mapDispatchToProps)(memo(Map, (prevProps, nextProps) => {
+  return (prevProps.currentTown === nextProps.currentTown && prevProps.hoverOfferId === nextProps.hoverOfferId
+    && prevProps.placeCards === nextProps.placeCards);
+}));
 

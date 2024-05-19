@@ -1,13 +1,19 @@
-import React from "react";
+import React, {useEffect} from "react";
+import withStore from "./hocs/with-store";
+import PropTypes from "prop-types";
+import {useCallback} from "react";
+import {memo} from "react";
 
 const ReviewForm = (props) => {
 
+  const {postComment, offerId, requestError, commentError, resetError} = props;
+
   const [userForm, setUserForm] = React.useState({
-    rating: `1`,
+    rating: `0`,
     review: ``,
   });
 
-  const handleFormSubmit = (evt) => {
+  const handleFormSubmit = useCallback((evt) => {
     evt.preventDefault();
     const formData = new FormData(evt.target);
     const userFormData = {};
@@ -15,7 +21,16 @@ const ReviewForm = (props) => {
       userFormData[name] = value;
     }
     setUserForm(userFormData);
-  };
+    postComment(userFormData, offerId);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      resetError();
+    };
+  }, []);
+
+
   return <form className="reviews__form form" action="#" method="post" onSubmit={handleFormSubmit}>
     <label className="reviews__label form__label" htmlFor="review">Your review</label>
     <div className="reviews__rating-form form__rating">
@@ -68,8 +83,16 @@ const ReviewForm = (props) => {
       </p>
       <button className="reviews__submit form__submit button" type="submit" disabled="">Submit</button>
     </div>
+    {requestError && (<span className="reviews__error">{commentError}</span>)}
   </form>;
 };
 
+ReviewForm.propTypes = {
+  postComment: PropTypes.func,
+  resetError: PropTypes.func,
+  offerId: PropTypes.number
+};
 
-export default ReviewForm;
+export default withStore(memo(ReviewForm, (prevProps, nextProps) => {
+  return (prevProps.commentError === nextProps.commentError);
+}));

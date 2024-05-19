@@ -1,13 +1,14 @@
-import {ActionsCreator} from "../../../store/actions";
 import {connect} from "react-redux";
+import {getSort} from "../../../store/process/selectors";
+import {sortChange} from "../../../store/actions";
 
 const mapStateToProps = (state) => ({
-  sort: state.sort
+  sort: getSort(state)
 });
 
 const mapDispatchToProps = (dispatch) => ({
   setSorter: (sort) => {
-    dispatch(ActionsCreator.sortChange(sort));
+    dispatch(sortChange(sort));
   }
 });
 

@@ -12,29 +12,14 @@ import {placeCardProps} from "../../proptypes/place-card";
 import {connect} from "react-redux";
 import PrivateRoute from "../private-route/privateRoute";
 import {AUTH_STATUS} from "../../const/const";
+import {getOffers} from "../../store/offers-data/selectors";
+import {getCurrentTown} from "../../store/process/selectors";
+import {getAuthorizationStatus} from "../../store/user/selectors";
 
 const App = (props) => {
   const {placeCards, authorizationStatus} = props;
   return <BrowserRouter>
     <Routes>
-      {/* {placeCards.map((card) => {*/}
-      {/*  const id = card.id;*/}
-      {/*  let reviewsOfThisCard = props.reviews[id];*/}
-      {/*  let others = placeCards.filter((placeCard) => {*/}
-      {/*    return placeCard.id !== id; // используем others после его объявления*/}
-      {/*  });*/}
-      {/*  if (others.length > 3) { // проверяем длину отфильтрованного массива*/}
-      {/*    others = others.slice(0, 3); // если длина больше 3, обрезаем массив до первых трёх элементов*/}
-      {/*  }*/}
-      {/*  return (*/}
-      {/*    <Route*/}
-      {/*      key={id} // Уникальный ключ для каждого маршрута*/}
-      {/*      path={`offer/${card.id}`} // Путь для маршрута*/}
-      {/*      element={<WithLayout><Offer reviews={reviewsOfThisCard ? reviewsOfThisCard : []} card={card}*/}
-      {/*        others={others}/></WithLayout>} // Передаем оффер в компонент Offer*/}
-      {/*    />*/}
-      {/*  );*/}
-      {/* })}*/}
       <Route path="/offer/:id" exact
         element={<WithLayout><Offer/></WithLayout>}/>
       <Route path="/favorites"
@@ -65,11 +50,11 @@ const App = (props) => {
 
 };
 
-const mapStateToProps = (state) => ({
-  placeCards: state.offers,
-  currentTown: state.currentTown,
-  authorizationStatus: state.authorizationStatus
-});
+const mapStateToProps = ((state) => ({
+  placeCards: getOffers(state),
+  currentTown: getCurrentTown(state),
+  authorizationStatus: getAuthorizationStatus(state)
+}));
 
 App.propTypes = {
   reviews: PropTypes.objectOf(PropTypes.arrayOf(PropTypes.shape(ReviewCardProps))),

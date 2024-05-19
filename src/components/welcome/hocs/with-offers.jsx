@@ -1,26 +1,28 @@
 import {connect} from "react-redux";
+import {townChange, dataIsLoaded} from "../../../store/actions";
 import {ApiActionsCreator} from "../../../store/api-actions";
-import {ActionsCreator} from "../../../store/actions";
+import {getCurrentTown, getHoverOfferId, getIsDataLoaded, getSort} from "../../../store/process/selectors";
+import {getOffers} from "../../../store/offers-data/selectors";
 
 
 const mapStateToProps = (state) => ({
-  sort: state.sort,
-  currentHoverOfferId: state.hoverOfferId,
-  isDataLoaded: state.isDataLoaded,
-  hotels: state.offers,
-  currentTown: state.currentTown
+  sort: getSort(state),
+  currentHoverOfferId: getHoverOfferId(state),
+  isDataLoaded: getIsDataLoaded(state),
+  hotels: getOffers(state),
+  currentTown: getCurrentTown(state)
 });
 
 const mapDispatchToProps = (dispatch) => ({
   onLoadData() {
-    dispatch(ApiActionsCreator.getOffers());
     dispatch(ApiActionsCreator.loginCheck());
+    return dispatch(ApiActionsCreator.getOffers());
   },
   setCurrentTown(town) {
-    dispatch(ActionsCreator.townChange(town));
+    dispatch(townChange(town));
   },
   resetDataLoadedFlag() {
-    dispatch(ActionsCreator.dataIsLoaded(false));
+    dispatch(dataIsLoaded(false));
   }
 
 });

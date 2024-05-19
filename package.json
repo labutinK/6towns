@@ -29,6 +29,7 @@
     "node": ">=12.0.0"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "1.5.0",
     "axios": "0.21",
     "generate-unique-id": "^2.0.3",
     "leaflet": "1.7.1",

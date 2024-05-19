@@ -1,5 +1,5 @@
-import {ActionsCreator} from "./actions";
 import {API_ROUTES, AUTH_STATUS} from "../const/const";
+import {fillDetailOffer, fillOffers, fillNearbyOffers, fillDetailReviews, dataIsLoaded, notFound, requestError, commentError, login, authStatusChange} from "./actions";
 
 const adaptPointToClient = (pointServer) => {
   let pointClient = Object.assign(
@@ -89,37 +89,45 @@ const adaptReviewToClient = (reviewServer) => {
 
 export const ApiActionsCreator = {
   getOffers: () => async (dispatch, _getState, api) => {
-    const {data} = await api.get(API_ROUTES.HOTELS);
-    dispatch(ActionsCreator.fillOffers(data.map((item) => adaptPointToClient(item))));
-    dispatch(ActionsCreator.dataIsLoaded(true));
+    return api.get(API_ROUTES.HOTELS).then(({data}) => {
+      dispatch(fillOffers(data.map((item) => adaptPointToClient(item))));
+      dispatch(dataIsLoaded(true));
+    });
   },
   getDetailOffer: (id) => async (dispatch, _getState, api) => {
     try {
       const hotels = await api.get(API_ROUTES.HOTELS + `/` + id);
       const comments = await api.get(API_ROUTES.COMMENTS + `/` + id);
       const nearby = await api.get(API_ROUTES.HOTELS + `/` + id + `/nearby`);
-      dispatch(ActionsCreator.fillDetailReviews(comments.data.slice(0, 3).map((review) => adaptReviewToClient(review))));
-      dispatch(ActionsCreator.fillNearbyOffers(nearby.data.slice(0, 3).map((item) => adaptPointToClient(item))));
-      dispatch(ActionsCreator.fillDetailOffer(adaptPointToClient(hotels.data)));
+      dispatch(fillDetailReviews(comments.data.slice(0, 3).map((review) => adaptReviewToClient(review))));
+      dispatch(fillNearbyOffers(nearby.data.slice(0, 3).map((item) => adaptPointToClient(item))));
+      dispatch(fillDetailOffer(adaptPointToClient(hotels.data)));
     } catch (error) {
-      dispatch(ActionsCreator.notFound(true));
+      dispatch(notFound(true));
     }
   },
   loginCheck: () => (dispatch, _getState, api) => {
-    api.get(API_ROUTES.LOGIN).then(() => dispatch(ActionsCreator.authStatusChange(AUTH_STATUS.AUTH))).catch(() => {
+    api.get(API_ROUTES.LOGIN).then(() => dispatch(authStatusChange(AUTH_STATUS.AUTH))).catch(() => {
     });
   },
   login: (fd, navigate) => (dispatch, _getState, api) => {
     api.post(API_ROUTES.LOGIN, fd).then(({data}) => {
-      dispatch(ActionsCreator.login(data));
-      dispatch(ActionsCreator.authStatusChange(AUTH_STATUS.AUTH));
+      dispatch(login(data));
+      dispatch(authStatusChange(AUTH_STATUS.AUTH));
       navigate(`/`);
     }).catch(() => {
     });
   },
   resetAllDetailData: () => (dispatch, _getState) => {
-    dispatch(ActionsCreator.fillDetailReviews([]));
-    dispatch(ActionsCreator.fillNearbyOffers([]));
-    dispatch(ActionsCreator.fillDetailOffer({}));
+    dispatch(fillDetailReviews([]));
+    dispatch(fillNearbyOffers([]));
+    dispatch(fillDetailOffer({}));
+  },
+  postComment: (data, id) => (dispatch, _getState, api) => {
+    api.post(API_ROUTES.COMMENTS + `/` + id, data).then(({data}) => {
+    }).catch((error) => {
+      dispatch(requestError(true));
+      dispatch(commentError(error.response.data.error));
+    });
   }
 };

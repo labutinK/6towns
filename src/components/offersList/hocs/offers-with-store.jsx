@@ -1,13 +1,14 @@
 import {connect} from "react-redux";
-import {ActionsCreator} from "../../../store/actions";
+import {hoverOfferId} from "../../../store/actions";
+import {getHoverOfferId} from "../../../store/process/selectors";
 
 const mapStateToProps = (state) => ({
-  hoverOfferId: state.hoverOfferId
+  hoverOfferId: getHoverOfferId(state)
 });
 
 const mapDispatchToProprs = (dispatch) => ({
   setNewHoverOffer: (id) => {
-    dispatch(ActionsCreator.hoverOfferId(id));
+    dispatch(hoverOfferId(id));
   }
 });
 export default connect(mapStateToProps, mapDispatchToProprs);

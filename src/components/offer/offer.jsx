@@ -16,6 +16,7 @@ const Offer = (props) => {
   const {card} = props;
 
   const {
+    id,
     features,
     host,
     goods,
@@ -39,6 +40,7 @@ const Offer = (props) => {
       }
   ));
 
+  console.log(`offers component`);
 
   const getButton = (isFav) => {
     if (isFav) {
@@ -112,7 +114,7 @@ const Offer = (props) => {
               </div>
             )}
             {<Host host={host}></Host>}
-            {<Reviews reviews={reviews}></Reviews>}
+            {<Reviews offerId={id} reviews={reviews}></Reviews>}
           </div>
         </div>
         {<Map placeCards={othersForMap} className={`property__map`} circle={location}></Map>}

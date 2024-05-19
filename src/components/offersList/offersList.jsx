@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {placeCardProps} from "../../proptypes/place-card";
 import PlaceCard from "../placeCard/placeCard";
 import offersWithStore from "./hocs/offers-with-store";
+import {memo} from "react";
 
 const OffersList = (props) => {
   const {placeCards, className, hoverOfferId, setNewHoverOffer} = props;
@@ -35,6 +36,8 @@ OffersList.propTypes = {
   setNewHoverOffer: PropTypes.func
 };
 
-export default offersWithStore(OffersList);
+export default offersWithStore(memo(OffersList, (prevProps, nextProps) => {
+  return prevProps.placeCards === nextProps.placeCards;
+}));
 
 
