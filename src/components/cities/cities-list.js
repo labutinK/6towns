@@ -1,12 +1,15 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import {cityProps} from "../../proptypes/city";
 import generateUniqueId from "generate-unique-id";
-import citiesWithStore from "./hocs/cities-with-store";
-import {memo} from "react";
+import {useSelector, useDispatch} from "react-redux";
+import {NameSpace} from "../../store/root-reducer";
+import {townChange} from "../../store/actions";
 
 const CitiesList = (props) => {
-  const {items, currentTown, setCurrentCity} = props;
+  const currentTown = useSelector((state) => state[NameSpace.process].currentTown);
+  const {items} = props;
+  const dispatch = useDispatch();
 
   return <>
     <h1 className="visually-hidden">Cities</h1>
@@ -18,7 +21,7 @@ const CitiesList = (props) => {
               {items.map((city) => {
                 return <li key={generateUniqueId()} className='locations__item'
                   onClick={() => {
-                    setCurrentCity(city);
+                    dispatch(townChange(city));
                   }}
                 >
                   <span className={`locations__item-link tabs__item ${city === currentTown && `tabs__item--active`}`}>
@@ -36,11 +39,7 @@ const CitiesList = (props) => {
 
 
 CitiesList.propTypes = {
-  currentTown: PropTypes.shape(cityProps),
-  setCurrentCity: PropTypes.func,
   items: PropTypes.arrayOf(PropTypes.shape(cityProps))
 };
 
-export default citiesWithStore(memo(CitiesList, (prevProps, nextProps) => {
-  return prevProps.currentTown.name === nextProps.currentTown.name;
-}));
+export default CitiesList;

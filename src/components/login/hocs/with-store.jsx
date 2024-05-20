@@ -1,12 +1,9 @@
 import {connect} from "react-redux";
-import {ApiActionsCreator} from "../../../store/api-actions";
-
-const mapStateToProps = (state) => {
-};
+import {goLogin} from "../../../store/api-actions";
 
 const mapDispatchToProps = (dispatch) => ({
   login(formData, navigate) {
-    dispatch(ApiActionsCreator.login(formData, navigate));
+    dispatch(goLogin(formData, navigate));
   }
 });
 

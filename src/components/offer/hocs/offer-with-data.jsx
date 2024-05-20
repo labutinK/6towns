@@ -1,23 +1,25 @@
-import {connect} from "react-redux";
-import {ApiActionsCreator} from "../../../store/api-actions";
+import {useSelector, useDispatch} from "react-redux";
 import React, {useEffect, useState} from "react";
 import {Link, useParams, useLocation} from "react-router-dom";
 import LoadingScreen from "../../loading-screen/loading-screen";
-import PropTypes from "prop-types";
-import {getDetailNearby, getDetailOffer, getDetailReviews} from "../../../store/offers-data/selectors";
-import {getNotFound} from "../../../store/process/selectors";
 import {notFound as nnFound} from "../../../store/actions";
+import {getDetailOfferData, resetAllDetailData} from "../../../store/api-actions";
+import {NameSpace} from "../../../store/root-reducer";
 
 const offerWithData = (WrappedComponent) => {
-  const OfferWithData = (props) => {
+  const OfferWithData = () => {
+    const dispatch = useDispatch();
     const {id} = useParams();
-    const {onLoadOffer, detailOffer, notFound, resetNotFound, detailReviews, detailNearby, resetAllData} = props;
+    const detailOffer = useSelector((state) => state[NameSpace.data].detailOffer);
+    const detailReviews = useSelector((state) => state[NameSpace.data].detailReviews);
+    const detailNearby = useSelector((state) => state[NameSpace.data].detailNearby);
+    const notFound = useSelector((state) => state[NameSpace.data].notFound);
     const [offerLoaded, setLoadedStatus] = useState(false);
     const location = useLocation();
 
     useEffect(() => {
       if (!offerLoaded) {
-        onLoadOffer(id);
+        dispatch(getDetailOfferData(id));
       }
     }, [offerLoaded]);
 
@@ -29,10 +31,10 @@ const offerWithData = (WrappedComponent) => {
 
     useEffect(() => {
       return () => {
-        resetAllData();
+        dispatch(resetAllDetailData());
         setLoadedStatus(false);
         if (notFound) {
-          resetNotFound();
+          dispatch(nnFound(false));
         }
       };
     }, [location]);
@@ -53,36 +55,7 @@ const offerWithData = (WrappedComponent) => {
     return <WrappedComponent card={detailOffer} reviews={detailReviews} others={detailNearby}></WrappedComponent>;
   };
 
-  OfferWithData.propTypes = {
-    onLoadOffer: PropTypes.func,
-    detailOffer: PropTypes.object,
-    notFound: PropTypes.bool,
-    resetNotFound: PropTypes.func,
-    resetAllData: PropTypes.func,
-    detailReviews: PropTypes.array,
-    detailNearby: PropTypes.array
-  };
-
-  const mapStoreToProps = (state) => ({
-    detailOffer: getDetailOffer(state),
-    notFound: getNotFound(state),
-    detailReviews: getDetailReviews(state),
-    detailNearby: getDetailNearby(state)
-  });
-
-  const mapDispatchToProps = (dispatch) => ({
-    onLoadOffer: (id) => {
-      dispatch(ApiActionsCreator.getDetailOffer(id));
-    },
-    resetNotFound: () => {
-      dispatch(nnFound(false));
-    },
-    resetAllData: () => {
-      dispatch(ApiActionsCreator.resetAllDetailData());
-    }
-  });
-
-  return connect(mapStoreToProps, mapDispatchToProps)(OfferWithData);
+  return OfferWithData;
 };
 
 

@@ -1,6 +1,5 @@
 import React, {useEffect, useMemo, useState} from "react";
 import PropTypes from 'prop-types';
-import {placeCardProps} from "../../proptypes/place-card";
 import OffersList from "../offersList/offersList";
 import Map from "../map/map";
 import CitiesList from "../cities/cities-list";
@@ -8,12 +7,21 @@ import Sort from "../sort/sort";
 import {SORTS, POPULAR_SORT} from "../../const/const";
 import LoadingScreen from "../loading-screen/loading-screen";
 import {cityProps} from "../../proptypes/city";
-import withOffers from "./hocs/with-offers";
 import {useLocation} from "react-router-dom";
 import {memo} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {NameSpace} from "../../store/root-reducer";
+import {getOffersData, loginCheck} from "../../store/api-actions";
+import {dataIsLoaded, townChange} from "../../store/actions";
 
 const Welcome = (props) => {
-  const {sort, currentTown, hotels, isDataLoaded, onLoadData, setCurrentTown, resetDataLoadedFlag} = props;
+  const dispatch = useDispatch();
+
+
+  const sort = useSelector((state) => state[NameSpace.process].sort);
+  const currentTown = useSelector((state) => state[NameSpace.process].currentTown);
+  const hotels = useSelector((state) => state[NameSpace.data].offers);
+  const isDataLoaded = useSelector((state) => state[NameSpace.process].isDataLoaded);
 
   const [offers, setNewOffers] = useState([]);
   const [popularOffers, setNewPopularOffers] = useState([]);
@@ -24,7 +32,6 @@ const Welcome = (props) => {
   const filterCards = (cards) => {
     return cards.filter((card) => card.city.name === currentTown.name);
   };
-
   const filteredCards = useMemo(() => filterCards(hotels), [currentTown]);
 
   const arraysAreEqual = (arr1, arr2) => {
@@ -47,14 +54,20 @@ const Welcome = (props) => {
   };
 
   useEffect(() => {
+    const loadData = async () => {
+      try {
+        await dispatch(loginCheck());
+        await dispatch(getOffersData());
+      } catch (error) {
+        console.error(`Failed to load data:`, error);
+      }
+    };
     if (!isDataLoaded) {
-      onLoadData().then(() => {
-        setLoading(false);
-      });
+      loadData();
     } else {
       const towns = getTownsFromHotels(hotels);
       setNewCities(towns);
-      setCurrentTown(towns[0]);
+      dispatch(townChange(towns[0]));
     }
 
   }, [isDataLoaded]);
@@ -64,6 +77,7 @@ const Welcome = (props) => {
     if (currentTown && currentTown.name) {
       setNewOffers(filteredCards);
       setNewPopularOffers(filteredCards);
+      setLoading(false);
     }
   }, [currentTown]);
 
@@ -80,7 +94,7 @@ const Welcome = (props) => {
   }, [sort]);
 
   useEffect(() => {
-    resetDataLoadedFlag();
+    dispatch(dataIsLoaded(false));
   }, [location]);
 
   if (!isDataLoaded || isLoading) {
@@ -109,24 +123,10 @@ const Welcome = (props) => {
   </div>;
 };
 
-
-Welcome.propTypes = {
-  placeCards: PropTypes.arrayOf(PropTypes.shape(placeCardProps)),
-  hotels: PropTypes.arrayOf(PropTypes.shape(placeCardProps)),
-  children: PropTypes.node,
-  currentTown: PropTypes.shape(cityProps),
-  towns: PropTypes.arrayOf(PropTypes.shape(cityProps)),
-  sort: PropTypes.string,
-  onLoadData: PropTypes.func,
-  setCurrentTown: PropTypes.func,
-  isDataLoaded: PropTypes.bool,
-  resetDataLoadedFlag: PropTypes.func
-};
-
-export default withOffers(memo(Welcome, (prevProps, nextProps) => {
+export default memo(Welcome, (prevProps, nextProps) => {
   return (prevProps.sort === nextProps.sort && prevProps.currentTown === nextProps.currentTown
     && prevProps.offers === nextProps.offers
     && prevProps.isDataLoaded === nextProps.isDataLoaded);
-}));
+});
 
 

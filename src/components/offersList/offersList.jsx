@@ -2,21 +2,25 @@ import React, {useEffect, useState} from "react";
 import PropTypes from 'prop-types';
 import {placeCardProps} from "../../proptypes/place-card";
 import PlaceCard from "../placeCard/placeCard";
-import offersWithStore from "./hocs/offers-with-store";
 import {memo} from "react";
+import {useSelector, useDispatch} from "react-redux";
+import {NameSpace} from "../../store/root-reducer";
+import {hoverOfferId} from "../../store/actions";
 
 const OffersList = (props) => {
-  const {placeCards, className, hoverOfferId, setNewHoverOffer} = props;
+  const hoverId = useSelector((state) => state[NameSpace.process].hoverOfferId);
+  const {placeCards, className} = props;
+  const dispatch = useDispatch();
   mouseOnOfferHandler.bind(mouseOnOfferHandler);
 
   function mouseOnOfferHandler(id) {
-    if (hoverOfferId !== id) {
-      setNewHoverOffer(id);
+    if (hoverId !== id) {
+      dispatch(hoverOfferId(id));
     }
   }
 
   function mouseOutOfferHandler() {
-    setNewHoverOffer(0);
+    dispatch(hoverOfferId(0));
   }
 
   return <div className={`${className}`}>
@@ -32,12 +36,10 @@ const OffersList = (props) => {
 OffersList.propTypes = {
   placeCards: PropTypes.arrayOf(PropTypes.shape(placeCardProps)),
   className: PropTypes.string,
-  hoverOfferId: PropTypes.number,
-  setNewHoverOffer: PropTypes.func
 };
 
-export default offersWithStore(memo(OffersList, (prevProps, nextProps) => {
+export default memo(OffersList, (prevProps, nextProps) => {
   return prevProps.placeCards === nextProps.placeCards;
-}));
+});
 
 

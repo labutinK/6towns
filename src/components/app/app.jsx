@@ -1,23 +1,20 @@
 import React from "react";
 import Welcome from "../welcome/welcome";
 import Favorites from "../favorites/favorites";
-import PropTypes from "prop-types";
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 import WithLayout from "../../layout/with-layout";
 import Login from "../login/login";
 import Offer from "../offer/offer";
 import {Link} from "react-router-dom";
-import {ReviewCardProps} from "../../proptypes/review-card";
-import {placeCardProps} from "../../proptypes/place-card";
-import {connect} from "react-redux";
 import PrivateRoute from "../private-route/privateRoute";
 import {AUTH_STATUS} from "../../const/const";
-import {getOffers} from "../../store/offers-data/selectors";
-import {getCurrentTown} from "../../store/process/selectors";
-import {getAuthorizationStatus} from "../../store/user/selectors";
+import {useSelector} from "react-redux";
+import {NameSpace} from "../../store/root-reducer";
 
-const App = (props) => {
-  const {placeCards, authorizationStatus} = props;
+const App = () => {
+  const placeCards = useSelector((state) => state[NameSpace.data].offers);
+  const authorizationStatus = useSelector((state) => state[NameSpace.user].authorizationStatus);
+
   return <BrowserRouter>
     <Routes>
       <Route path="/offer/:id" exact
@@ -50,18 +47,5 @@ const App = (props) => {
 
 };
 
-const mapStateToProps = ((state) => ({
-  placeCards: getOffers(state),
-  currentTown: getCurrentTown(state),
-  authorizationStatus: getAuthorizationStatus(state)
-}));
-
-App.propTypes = {
-  reviews: PropTypes.objectOf(PropTypes.arrayOf(PropTypes.shape(ReviewCardProps))),
-  placeCards: PropTypes.arrayOf(PropTypes.shape(placeCardProps)),
-  authorizationStatus: PropTypes.string.isRequired,
-};
-
-export {App};
-export default connect(mapStateToProps)(App);
+export default App;
 

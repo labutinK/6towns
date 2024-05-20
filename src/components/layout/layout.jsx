@@ -1,11 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
 import {Link} from "react-router-dom";
-import withStore from "./hocs/with-store";
 import {AUTH_STATUS} from "../../const/const";
+import {useSelector} from "react-redux";
+import {NameSpace} from "../../store/root-reducer";
 
 const Layout = (props) => {
-  const {isAuth, userData} = props;
+  const isAuth = useSelector((state) => state[NameSpace.user].authorizationStatus);
+  const userData = useSelector((state) => state[NameSpace.user].userData);
 
   return <div className="page page--gray page--main">
     <header className="header">
@@ -45,4 +47,4 @@ Layout.propTypes = {
   isAuth: PropTypes.string
 };
 
-export default withStore(Layout);
+export default Layout;

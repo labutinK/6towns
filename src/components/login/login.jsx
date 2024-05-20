@@ -2,6 +2,7 @@ import React, {useRef} from "react";
 import PropTypes from "prop-types";
 import withStore from "./hocs/with-store";
 import {useNavigate} from "react-router-dom";
+import {useDispatch} from "react-redux";
 
 const Login = (props) => {
   const {login} = props;

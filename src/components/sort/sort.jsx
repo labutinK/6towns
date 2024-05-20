@@ -1,9 +1,13 @@
 import React, {useEffect} from "react";
 import PropTypes from 'prop-types';
-import sortWithStore from "./hocs/sort-with-store";
+import {useSelector, useDispatch} from "react-redux";
+import {NameSpace} from "../../store/root-reducer";
+import {sortChange} from "../../store/actions";
 
 const Sort = (props) => {
-  const {items, setSorter, sort} = props;
+  const dispatch = useDispatch();
+  const sort = useSelector((state) => state[NameSpace.process].sort);
+  const {items} = props;
 
   const listRef = React.createRef();
   const [opened, setOpened] = React.useState(false);
@@ -52,7 +56,7 @@ const Sort = (props) => {
         {Object.values(items).map((item) => (
           <li key={item.id} className={`places__option ${item.id === sort && `places__option--active`}`}
             onClick={() => {
-              setSorter(getKeyByValue(items, item));
+              dispatch(sortChange(getKeyByValue(items, item)));
               setOpened(false);
             }}
             tabIndex={item.id}>
@@ -67,9 +71,7 @@ const Sort = (props) => {
 
 Sort.propTypes = {
   items: PropTypes.object,
-  setSorter: PropTypes.func,
-  sort: PropTypes.string
 };
 
-export default sortWithStore(Sort);
+export default Sort;
 
